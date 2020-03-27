@@ -1,10 +1,11 @@
 FROM ubuntu:focal as builder
-RUN apt-get update \
+RUN sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list \
+    && apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         build-essential \
         dpkg-dev \
         pulseaudio \
-    && apt-get build-dep pulseaudio \
+    && apt-get build-dep -y pulseaudio \
     && apt-get source pulseaudio \
     && rm -rf /var/lib/apt/lists/*
 
