@@ -23,4 +23,3 @@ COPY entrypoint.sh /usr/bin/entrypoint
 WORKDIR /home/ubuntu
 EXPOSE 3389/tcp
 ENTRYPOINT ["/usr/bin/entrypoint"]
-CMD ["/bin/bash"]
