@@ -2,12 +2,12 @@ FROM ubuntu:eoan
 
 RUN apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
-        xfce4 \
-        xfce4-terminal \
         dbus-x11 \
         x11-xserver-utils \
-        xrdp \
+        xfce4 \
+        xfce4-terminal \
         xorgxrdp \
+        xrdp \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g 1020 ubuntu \
