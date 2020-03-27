@@ -5,4 +5,4 @@ docker run -it \
     --hostname="$(hostname)" \
     --publish="3389:3389/tcp" \
     --name="xrdp-xfce" \
-    docker-xrdp-xfce:latest "$@"
+    docker-xrdp-xfce:latest /bin/bash
