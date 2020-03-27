@@ -60,7 +60,7 @@ cd docker-xrdp-xfce
 You can then build the image with the supplied script:
 
 ```bash
-./build.sh
+./build
 ```
 
 Or run the following `docker` command:
