@@ -45,7 +45,7 @@ docker run --detach \
 
 To stop the detached container:
 ```bash
-docker stop xrdp-xfce
+docker kill xrdp-xfce
 ```
 
 ## Connecting with an RDP client
