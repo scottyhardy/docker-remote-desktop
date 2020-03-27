@@ -54,6 +54,7 @@ First, clone the GitHub repository:
 
 ```bash
 git clone https://github.com/scottyhardy/docker-xrdp-xfce.git
+
 cd docker-xrdp-xfce
 ```
 
