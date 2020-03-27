@@ -8,6 +8,7 @@ RUN apt-get update \
         xfce4-terminal \
         xorgxrdp \
         xrdp \
+        xubuntu-icon-theme \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g 1020 ubuntu \
