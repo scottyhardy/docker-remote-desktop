@@ -6,6 +6,12 @@ I wanted to create an easily maintainable RDP server image based on Ubuntu that 
 
 ## Running manually with `docker` commands
 
+Download the latest version of the image:
+
+```bash
+docker pull scottyhardy/docker-xrdp-xfce
+```
+
 To run with an interactive bash session:
 
 ```bash
