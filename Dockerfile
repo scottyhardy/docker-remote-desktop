@@ -1,9 +1,11 @@
+# Build xrdp pulseaudio modules in builder container
 FROM ubuntu:focal as builder
 RUN sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list \
     && apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         build-essential \
         dpkg-dev \
+        git \
         pulseaudio \
     && apt-get build-dep -y pulseaudio \
     && apt-get source pulseaudio \
@@ -19,6 +21,7 @@ RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git \
     && ./configure PULSE_DIR=../pulseaudio-$(pulseaudio --version | awk '{print $2}') \
     && make
 
+# Build the final image
 FROM ubuntu:focal
 
 RUN apt-get update \
