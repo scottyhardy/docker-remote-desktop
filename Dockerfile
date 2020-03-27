@@ -15,6 +15,5 @@ RUN groupadd -g 1020 ubuntu \
         --create-home --home-dir /home/ubuntu ubuntu
 
 COPY entrypoint.sh /usr/bin/entrypoint
-WORKDIR /home/ubuntu
 EXPOSE 3389/tcp
 ENTRYPOINT ["/usr/bin/entrypoint"]
