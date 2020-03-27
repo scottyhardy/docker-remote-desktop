@@ -48,6 +48,10 @@ Username: ubuntu
 Password: ubuntu
 ```
 
+![Screenshot of login prompt](https://raw.githubusercontent.com/scottyhardy/docker-xrdp-xfce/master/screenshot_1.png)
+
+![Screenshot of XFCE desktop](https://raw.githubusercontent.com/scottyhardy/docker-xrdp-xfce/master/screenshot_2.png)
+
 ## Building docker-xrdp-xfce on your own machine
 
 First, clone the GitHub repository:
