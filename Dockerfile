@@ -2,9 +2,8 @@ FROM ubuntu:eoan
 
 RUN apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
-        gosu \
         xfce4 \
-        xfce4-goodies \
+        xfce4-terminal \
         xorg \
         dbus-x11 \
         x11-xserver-utils \
