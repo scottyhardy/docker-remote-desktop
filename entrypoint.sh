@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
-# Run xrdp as daemon
-/usr/sbin/xrdp
+# Start xrdp sesman service
+/usr/sbin/xrdp-sesman
 
-exec "$@"
-#exec gosu ubuntu "$@"
+# Run xrdp in foreground if no commands specified
+if [ -z "$1" ]; then
+    /usr/sbin/xrdp --nodaemon
+else
+    /usr/sbin/xrdp
+    exec "$@"
+fi
