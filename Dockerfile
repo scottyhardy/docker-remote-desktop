@@ -6,6 +6,7 @@ RUN sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list \
         build-essential \
         dpkg-dev \
         git \
+        libpulse-dev \
         pulseaudio \
     && apt-get build-dep -y pulseaudio \
     && apt-get source pulseaudio \
