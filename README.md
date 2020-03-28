@@ -1,4 +1,4 @@
-# docker-xrdp-xfce
+# docker-remote-desktop
 
 Minimal Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
 
@@ -9,7 +9,7 @@ I wanted to create an easily maintainable RDP server image based on Ubuntu that 
 Download the latest version of the image:
 
 ```bash
-docker pull scottyhardy/docker-xrdp-xfce
+docker pull scottyhardy/docker-remote-desktop
 ```
 
 To run with an interactive bash session:
@@ -19,8 +19,8 @@ docker run -it \
     --rm \
     --hostname="$(hostname)" \
     --publish="3389:3389/tcp" \
-    --name="xrdp-xfce" \
-    scottyhardy/docker-xrdp-xfce:latest /bin/bash
+    --name="remote-desktop" \
+    scottyhardy/docker-remote-desktop:latest /bin/bash
 ```
 
 To start as a detached daemon:
@@ -30,14 +30,14 @@ docker run --detach \
     --rm \
     --hostname="$(hostname)" \
     --publish="3389:3389/tcp" \
-    --name="xrdp-xfce" \
-    scottyhardy/docker-xrdp-xfce:latest
+    --name="remote-desktop" \
+    scottyhardy/docker-remote-desktop:latest
 ```
 
 To stop the detached container:
 
 ```bash
-docker kill xrdp-xfce
+docker kill remote-desktop
 ```
 
 ## Connecting with an RDP client
@@ -54,18 +54,18 @@ Username: ubuntu
 Password: ubuntu
 ```
 
-![Screenshot of login prompt](https://raw.githubusercontent.com/scottyhardy/docker-xrdp-xfce/master/screenshot_1.png)
+![Screenshot of login prompt](https://raw.githubusercontent.com/scottyhardy/docker-remote-desktop/master/screenshot_1.png)
 
-![Screenshot of XFCE desktop](https://raw.githubusercontent.com/scottyhardy/docker-xrdp-xfce/master/screenshot_2.png)
+![Screenshot of XFCE desktop](https://raw.githubusercontent.com/scottyhardy/docker-remote-desktop/master/screenshot_2.png)
 
-## Building docker-xrdp-xfce on your own machine
+## Building docker-remote-desktop on your own machine
 
 First, clone the GitHub repository:
 
 ```bash
-git clone https://github.com/scottyhardy/docker-xrdp-xfce.git
+git clone https://github.com/scottyhardy/docker-remote-desktop.git
 
-cd docker-xrdp-xfce
+cd docker-remote-desktop
 ```
 
 You can then build the image with the supplied script:
@@ -77,7 +77,7 @@ You can then build the image with the supplied script:
 Or run the following `docker` command:
 
 ```bash
-docker build -t docker-xrdp-xfce .
+docker build -t docker-remote-desktop .
 ```
 
 ## Running local images with scripts
