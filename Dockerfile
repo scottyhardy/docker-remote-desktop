@@ -51,7 +51,7 @@ RUN apt-get update \
         pulseaudio \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/lib/pulse-*/modules /usr/lib/pulse-*/modules
+COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-* /usr/lib/pulse-*/modules/
 COPY entrypoint.sh /usr/bin/entrypoint
 EXPOSE 3389/tcp
 ENTRYPOINT ["/usr/bin/entrypoint"]
