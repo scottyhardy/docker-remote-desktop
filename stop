@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker kill xrdp-xfce
+docker kill remote-desktop
