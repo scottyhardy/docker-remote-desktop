@@ -21,8 +21,7 @@ RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git /pulsea
     && ./bootstrap \
     && ./configure PULSE_DIR=/pulseaudio-$(pulseaudio --version | awk '{print $2}') \
     && make \
-    && make install \
-    && rm -f /usr/lib/pulse-*/modules/module-xrdp-sink.la /usr/lib/pulse-*/modules/module-xrdp-source.so
+    && make install
 
 # Build the final image
 FROM ubuntu:focal
@@ -52,7 +51,7 @@ RUN apt-get update \
         pulseaudio \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/lib/pulse-*/modules /usr/lib/pulse-*/modules
+COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-*/modules/module-xrdp-source.so /var/lib/xrdp-pulseaudio-installer/
 COPY entrypoint.sh /usr/bin/entrypoint
 EXPOSE 3389/tcp
 ENTRYPOINT ["/usr/bin/entrypoint"]
