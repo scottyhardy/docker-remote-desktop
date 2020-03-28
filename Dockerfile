@@ -12,14 +12,13 @@ RUN sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list \
     && apt-get source pulseaudio \
     && rm -rf /var/lib/apt/lists/*
 
-RUN cd pulseaudio-$(pulseaudio --version | awk '{print $2}') \
-    && ./configure \
-    && cd ..
+RUN cd /pulseaudio-$(pulseaudio --version | awk '{print $2}') \
+    && ./configure
 
-RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git \
-    && cd pulseaudio-module-xrdp \
+RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git /pulseaudio-module-xrdp \
+    && cd /pulseaudio-module-xrdp \
     && ./bootstrap \
-    && ./configure PULSE_DIR=../pulseaudio-$(pulseaudio --version | awk '{print $2}') \
+    && ./configure PULSE_DIR=/pulseaudio-$(pulseaudio --version | awk '{print $2}') \
     && make
 
 # Build the final image
