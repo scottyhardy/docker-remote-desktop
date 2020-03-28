@@ -1,4 +1,5 @@
 # Build xrdp pulseaudio modules in builder container
+# See https://github.com/neutrinolabs/pulseaudio-module-xrdp/wiki/README
 FROM ubuntu:focal as builder
 RUN sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list \
     && apt-get update \
@@ -19,7 +20,8 @@ RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git /pulsea
     && cd /pulseaudio-module-xrdp \
     && ./bootstrap \
     && ./configure PULSE_DIR=/pulseaudio-$(pulseaudio --version | awk '{print $2}') \
-    && make
+    && make \
+    && make install
 
 # Build the final image
 FROM ubuntu:focal
@@ -48,6 +50,8 @@ RUN apt-get update \
         pavucontrol \
         pulseaudio \
     && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /usr/lib/pulse-*/modules /usr/lib/pulse-*/modules
 COPY entrypoint.sh /usr/bin/entrypoint
 EXPOSE 3389/tcp
 ENTRYPOINT ["/usr/bin/entrypoint"]
