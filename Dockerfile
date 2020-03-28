@@ -51,6 +51,8 @@ RUN apt-get update \
         pulseaudio \
     && rm -rf /var/lib/apt/lists/*
 
+RUN sed -iE 's/; autospawn = yes/autospawn = yes/' /etc/pulse/client.conf
+
 COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-*/modules/module-xrdp-source.so /var/lib/xrdp-pulseaudio-installer/
 COPY entrypoint.sh /usr/bin/entrypoint
 EXPOSE 3389/tcp
