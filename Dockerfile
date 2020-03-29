@@ -43,10 +43,7 @@ RUN apt-get update \
         xorgxrdp \
         xrdp \
         xubuntu-icon-theme \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN groupadd -g 1020 ubuntu \
-    && useradd --shell /bin/bash --uid 1020 --gid 1020 --password $(openssl passwd ubuntu) --create-home --home-dir /home/ubuntu ubuntu \
+    && rm -rf /var/lib/apt/lists/* \
     && sed -iE 's/; autospawn = yes/autospawn = yes/' /etc/pulse/client.conf
 
 COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-*/modules/module-xrdp-source.so /var/lib/xrdp-pulseaudio-installer/
