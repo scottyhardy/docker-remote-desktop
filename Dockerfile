@@ -2,7 +2,7 @@
 # See https://github.com/neutrinolabs/pulseaudio-module-xrdp/wiki/README
 FROM ubuntu:eoan as builder
 
-RUN sed -iE 's/^# deb-src /deb-src /g' /etc/apt/sources.list \
+RUN sed -i -E 's/^# deb-src /deb-src /g' /etc/apt/sources.list \
     && apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         build-essential \
@@ -42,7 +42,7 @@ RUN apt-get update \
         xrdp \
         xubuntu-icon-theme \
     && rm -rf /var/lib/apt/lists/* \
-    && sed -iE 's/; autospawn = yes/autospawn = yes/' /etc/pulse/client.conf
+    && sed -i -E 's/; autospawn = yes/autospawn = yes/' /etc/pulse/client.conf
 
 COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-*/modules/module-xrdp-source.so /var/lib/xrdp-pulseaudio-installer/
 COPY entrypoint.sh /usr/bin/entrypoint
