@@ -1,7 +1,7 @@
 # Build xrdp pulseaudio modules in builder container
 # See https://github.com/neutrinolabs/pulseaudio-module-xrdp/wiki/README
 FROM ubuntu:latest as builder
-RUN sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list \
+RUN sed -Ei 's/^# deb-src /deb-src /g' /etc/apt/sources.list \
     && apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         build-essential \
