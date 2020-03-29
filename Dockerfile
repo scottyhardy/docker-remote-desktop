@@ -1,7 +1,8 @@
 # Build xrdp pulseaudio modules in builder container
 # See https://github.com/neutrinolabs/pulseaudio-module-xrdp/wiki/README
 FROM ubuntu:latest as builder
-RUN sed -Ei 's/^# deb-src /deb-src /g' /etc/apt/sources.list \
+
+RUN sed -iE 's/^# deb-src /deb-src /g' /etc/apt/sources.list \
     && apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         build-essential \
@@ -23,6 +24,7 @@ RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git /pulsea
     && make \
     && make install
 
+
 # Build the final image
 FROM ubuntu:latest
 
@@ -38,7 +40,6 @@ RUN apt-get update \
         xfce4 \
         xfce4-goodies \
         xfce4-pulseaudio-plugin \
-        xfce4-terminal \
         xorgxrdp \
         xrdp \
         xubuntu-icon-theme \
