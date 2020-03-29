@@ -30,7 +30,7 @@ FROM ubuntu:latest
 
 RUN apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
-        ca-cacert \
+        ca-certificates \
         dbus-x11 \
         firefox \
         pavucontrol \
