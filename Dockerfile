@@ -41,8 +41,10 @@ RUN apt-get update \
         xorgxrdp \
         xrdp \
         xubuntu-icon-theme \
-    && rm -rf /var/lib/apt/lists/* \
-    && sed -i -E 's/; autospawn = yes/autospawn = yes/' /etc/pulse/client.conf
+    && rm -rf /var/lib/apt/lists/*
+
+RUN sed -i -E 's/^; autospawn =.*/autospawn = yes/' /etc/pulse/client.conf \
+    && [ -f /etc/pulse/client.conf.d/00-disable-autospawn.conf ] && sed -i -E 's/^(autospawn=.*)/# \1/' /etc/pulse/client.conf.d/00-disable-autospawn.conf || :
 
 COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-*/modules/module-xrdp-source.so /var/lib/xrdp-pulseaudio-installer/
 COPY entrypoint.sh /usr/bin/entrypoint
