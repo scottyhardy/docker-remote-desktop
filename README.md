@@ -1,5 +1,7 @@
 # docker-remote-desktop
 
+![Docker Image CI](https://github.com/scottyhardy/docker-remote-desktop/workflows/Docker%20Image%20CI/badge.svg)
+
 Minimal Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
 
 I wanted to create an easily maintainable RDP server image based on Ubuntu that I could potentially use as a base for other images.  Similar GitHub projects I'd seen were a little messy and complicated and I just wanted a clean and easily maintained image with as few layers as possible.
