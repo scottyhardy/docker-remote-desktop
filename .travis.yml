@@ -1,7 +1,8 @@
-sudo: required
+language: ruby
+os: linux
+dist: bionic
 services:
   - docker
 
 script:
-  - ls -la
   - ./build

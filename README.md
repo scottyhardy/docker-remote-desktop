@@ -1,6 +1,6 @@
 # docker-remote-desktop
 
-![Docker Image CI](https://github.com/scottyhardy/docker-remote-desktop/workflows/Docker%20Image%20CI/badge.svg)
+[![Build Status](https://travis-ci.com/scottyhardy/docker-remote-desktop.svg?branch=master)](https://travis-ci.com/scottyhardy/docker-remote-desktop)
 
 Minimal Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
 
