@@ -3,6 +3,11 @@ os: linux
 dist: bionic
 services:
   - docker
-
 script:
-  - ./build
+  - build
+deploy:
+  provider: script
+  script: docker_push
+  on:
+    branch: master
+    condition: $TRAVIS_EVENT_TYPE =~ ^(push|cron)$
