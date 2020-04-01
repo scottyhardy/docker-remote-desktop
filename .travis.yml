@@ -4,7 +4,7 @@ dist: bionic
 services:
   - docker
 script:
-  - build
+  - ./build
 deploy:
   provider: script
   script: docker_push
