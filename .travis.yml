@@ -5,18 +5,13 @@ dist: bionic
 services:
   - docker
 
-jobs:
-  include:
-    - stage: build
-      script:
-      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-      - docker build -t $DOCKER_REPO .
-      - docker images
-      - docker tag $DOCKER_REPO $DOCKER_USERNAME/$DOCKER_REPO
-    - stage: deploy
-      deploy:
-        provider: script
-        script: docker push $DOCKER_USERNAME/$DOCKER_REPO
-        on:
-          branch: master
-          condition: $TRAVIS_EVENT_TYPE =~ ^(push|cron)$
+script:
+  - docker build -t $DOCKER_REPO .
+  - docker tag $DOCKER_REPO $DOCKER_USERNAME/$DOCKER_REPO
+
+deploy:
+  provider: script
+  script: docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $DOCKER_USERNAME/$DOCKER_REPO
+  on:
+    branch: master
+    condition: $TRAVIS_EVENT_TYPE =~ ^(push|cron)$
