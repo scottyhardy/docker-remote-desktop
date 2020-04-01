@@ -14,4 +14,4 @@ deploy:
   script: echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin && docker push $DOCKER_USERNAME/$DOCKER_REPO
   on:
     branch: master
-    condition: $TRAVIS_EVENT_TYPE =~ ^(push|cron)$
+    condition: $TRAVIS_EVENT_TYPE = cron
