@@ -11,7 +11,7 @@ env:
   - TAG=devel
 
 script:
-  - docker build -t $DOCKER_REPO:$TAG .
+  - docker build -t $DOCKER_REPO:$TAG --build-arg TAG=$TAG .
 
 deploy:
   provider: script
