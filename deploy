@@ -21,3 +21,9 @@ echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdi
 # Push the image and tags
 docker push "${DOCKER_USERNAME}/${DOCKER_REPO}:ubuntu-${TAG}"
 docker push "${DOCKER_USERNAME}/${DOCKER_REPO}:ubuntu-${CODENAME}"
+
+# Push ubuntu-rolling as latest
+if [ "${TAG}" == "rolling" ]; then
+    docker tag "${DOCKER_REPO}:ubuntu-${TAG}" "${DOCKER_USERNAME}/${DOCKER_REPO}:latest"
+    docker push "${DOCKER_USERNAME}/${DOCKER_REPO}:latest"
+fi
