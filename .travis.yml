@@ -5,13 +5,17 @@ dist: bionic
 services:
   - docker
 
+env:
+  - TAG=latest
+  - TAG=rolling
+  - TAG=devel
+
 script:
-  - docker build -t $DOCKER_REPO .
-  - docker tag $DOCKER_REPO $DOCKER_USERNAME/$DOCKER_REPO
+  - docker build -t $DOCKER_REPO:$TAG --build-arg TAG=$TAG .
 
 deploy:
   provider: script
-  script: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin && docker push $DOCKER_USERNAME/$DOCKER_REPO
+  script: bash deploy
   on:
     branch: master
-    condition: $TRAVIS_EVENT_TYPE = cron
+    condition: $TRAVIS_EVENT_TYPE =~ /^push|cron$/
