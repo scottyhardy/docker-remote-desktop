@@ -2,9 +2,17 @@
 
 [![Build Status](https://travis-ci.com/scottyhardy/docker-remote-desktop.svg?branch=master)](https://travis-ci.com/scottyhardy/docker-remote-desktop)
 
-Minimal Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
+Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
 
-I wanted to create an easily maintainable RDP server image based on Ubuntu that I could potentially use as a base for other images.  Similar GitHub projects I'd seen were a little messy and complicated and I just wanted a clean and easily maintained image with as few layers as possible.
+Images are built weekly using the Ubuntu `latest`, `rolling` and `devel` images as listed on the [Ubuntu Docker Hub page](https://hub.docker.com/_/ubuntu).  The following image tags are generated:
+
+* `ubuntu-latest`
+* `ubuntu-rolling`
+* `ubuntu-devel`
+
+Each image is also tagged with the version codename as `ubuntu-<codename>`.  e.g. `ubuntu-focal`
+
+If you pull the image without a tag or with the `latest` tag, it uses `ubuntu-rolling`.
 
 ## Running manually with `docker` commands
 
@@ -12,6 +20,12 @@ Download the latest version of the image:
 
 ```bash
 docker pull scottyhardy/docker-remote-desktop
+```
+
+Or download a different version of the image using the appropriate tag:
+
+```bash
+docker pull scottyhardy/docker-remote-desktop:ubuntu-focal
 ```
 
 To run with an interactive bash session:
