@@ -11,11 +11,11 @@ env:
   - TAG=devel
 
 script:
-  - docker build -t $DOCKER_REPO:$TAG --build-arg TAG=$TAG .
+  - docker build -t $DOCKER_REPO:ubuntu-$TAG --build-arg TAG=$TAG .
 
 deploy:
   provider: script
   script: bash deploy
   on:
     branch: master
-    condition: $TRAVIS_EVENT_TYPE =~ /^push|cron$/
+    condition: $TRAVIS_EVENT_TYPE = cron
