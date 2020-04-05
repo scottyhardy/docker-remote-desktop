@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Grab the base image and extract the Ubuntu version codename
+docker pull "ubuntu:${TAG}"
+CODENAME="$(docker run -it --rm "ubuntu:${TAG}" /bin/bash -c "grep VERSION_CODENAME= /etc/os-release | cut -d= -f2" | tr -d "\r")"
+
+if [ -n "${CODENAME}" ]; then
+    echo "Found Ubuntu codename '${CODENAME}'"
+else
+    echo "ERROR: Unable to determine Ubuntu version"
+    exit 1
+fi
+
+# Generate tags
+docker tag "${DOCKER_REPO}" "${DOCKER_USERNAME}/${DOCKER_REPO}:${TAG}"
+docker tag "${DOCKER_REPO}" "${DOCKER_USERNAME}/${DOCKER_REPO}:ubuntu-${CODENAME}"
+
+# Login to Docker Hub
+echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+
+# Push the image and tags
+docker push "${DOCKER_USERNAME}/${DOCKER_REPO}:${TAG}"
+docker push "${DOCKER_REPO}" "${DOCKER_USERNAME}/${DOCKER_REPO}:ubuntu-${CODENAME}"
