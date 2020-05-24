@@ -32,6 +32,8 @@ FROM ubuntu:$TAG
 RUN apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         dbus-x11 \
+        firefox \
+        git \
         pavucontrol \
         pulseaudio \
         pulseaudio-utils \
