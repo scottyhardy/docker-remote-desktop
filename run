@@ -5,4 +5,5 @@ docker run -it \
     --hostname="$(hostname)" \
     --publish="3389:3389/tcp" \
     --name="remote-desktop" \
+    --shm-size="1g" \
     docker-remote-desktop:latest /bin/bash
