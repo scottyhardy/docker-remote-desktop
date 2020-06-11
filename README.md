@@ -4,15 +4,16 @@
 
 Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
 
-Images are built weekly using the Ubuntu `latest`, `rolling` and `devel` images as listed on the [Ubuntu Docker Hub page](https://hub.docker.com/_/ubuntu).  The following image tags are generated:
+Images are built weekly using several different versions of Ubuntu.  The following image tags are generated:
 
-* `ubuntu-latest`
-* `ubuntu-rolling`
-* `ubuntu-devel`
+* `ubuntu-groovy`, `ubuntu-20.10`, `latest`
+* `ubuntu-focal`, `ubuntu-20.04`
+* `ubuntu-eoan`, `ubuntu-19.10`
+* `ubuntu-bionic`, `ubuntu-18.04`
 
-Each image is also tagged with the version codename as `ubuntu-<codename>`.  e.g. `ubuntu-focal`
+Each image is tagged with both the codename and version of Ubuntu used for the base image. e.g. Ubuntu focal is tagged with `ubuntu-focal` and `ubuntu-20.04`
 
-If you pull the image without a tag or with the `latest` tag, it uses `ubuntu-rolling`.
+If you pull the image without a tag or with the `latest` tag, it uses `ubuntu-groovy`.
 
 ## Running manually with `docker` commands
 
