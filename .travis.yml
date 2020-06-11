@@ -6,9 +6,10 @@ services:
   - docker
 
 env:
-  - TAG=latest
-  - TAG=rolling
-  - TAG=devel
+  - TAG=groovy
+  - TAG=focal
+  - TAG=eoan
+  - TAG=bionic
 
 script:
   - docker build -t $DOCKER_REPO:ubuntu-$TAG --build-arg TAG=$TAG .
