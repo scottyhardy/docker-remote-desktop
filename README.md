@@ -1,6 +1,6 @@
 # docker-remote-desktop
 
-[![Build Status](https://travis-ci.com/scottyhardy/docker-remote-desktop.svg?branch=master)](https://travis-ci.com/scottyhardy/docker-remote-desktop)
+[![Build and Push to DockerHub](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/push.yml/badge.svg)](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/push.yml)
 
 Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
 
