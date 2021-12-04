@@ -1,9 +1,11 @@
-name: push
+name: Push to DockerHub
 
 on:
   push:
     branches:
       - master
+  schedule:
+    - cron: '0 2 * * SUN'
 
 jobs:
   docker:
