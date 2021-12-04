@@ -1,6 +1,6 @@
 # Build xrdp pulseaudio modules in builder container
 # See https://github.com/neutrinolabs/pulseaudio-module-xrdp/wiki/README
-ARG TAG=rolling
+ARG TAG=latest
 FROM ubuntu:$TAG as builder
 
 RUN sed -i -E 's/^# deb-src /deb-src /g' /etc/apt/sources.list \
