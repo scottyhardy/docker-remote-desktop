@@ -1,7 +1,6 @@
 # docker-remote-desktop
 
-[![Build and Push to DockerHub](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/push.yml/badge.svg)](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/push.yml)
-
+[![build](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml/badge.svg)](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml)
 Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
 
 Images are built weekly using the Ubuntu Docker image with the 'latest' tag.
