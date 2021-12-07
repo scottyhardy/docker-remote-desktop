@@ -9,10 +9,6 @@ on:
 
 jobs:
   docker:
-    strategy:
-      matrix:
-        ubuntu_version:
-          - focal
     runs-on: ubuntu-latest
     steps:
       -
@@ -34,16 +30,20 @@ jobs:
         name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
+        env:
+          ubuntu_codename: focal
+          ubuntu_version: 20.04
         with:
           build-args: |
-            TAG=${{ matrix.ubuntu_version }}
+            TAG=${{ env.ubuntu_codename }}
           platforms:
             linux/amd64,
             linux/arm64
           push: true
           tags:
             scottyhardy/docker-remote-desktop:latest,
-            scottyhardy/docker-remote-desktop:ubuntu-${{ matrix.ubuntu_version }}
+            scottyhardy/docker-remote-desktop:ubuntu-${{ env.ubuntu_codename }},
+            scottyhardy/docker-remote-desktop:ubuntu-${{ env.ubuntu_version }}
       -
         name: Update repo description
         uses: peter-evans/dockerhub-description@v2
