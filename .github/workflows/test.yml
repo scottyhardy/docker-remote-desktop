@@ -8,6 +8,10 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ubuntu_version:
+          - focal
     steps:
       -
         name: Checkout
@@ -22,3 +26,6 @@ jobs:
         name: Build
         id: docker_build
         uses: docker/build-push-action@v2
+        with:
+          build-args: |
+            TAG=${{ matrix.ubuntu_version }}
