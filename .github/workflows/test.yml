@@ -25,5 +25,4 @@ jobs:
         with:
           platforms:
             linux/amd64,
-            linux/arm32v7,
-            linux/arm64v8,
+            linux/arm64
