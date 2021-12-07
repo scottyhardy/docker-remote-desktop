@@ -24,7 +24,6 @@ jobs:
         uses: docker/build-push-action@v2
         env:
           ubuntu_codename: focal
-          ubuntu_version: 20.04
         with:
           build-args: |
-            TAG=${{ env.ubuntu_version }}
+            TAG=${{ env.ubuntu_codename }}
