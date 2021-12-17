@@ -38,6 +38,7 @@ RUN apt-get update \
         pavucontrol \
         pulseaudio \
         pulseaudio-utils \
+        sudo \
         x11-xserver-utils \
         xfce4 \
         xfce4-goodies \
