@@ -11,20 +11,20 @@ RUN sed -i -E 's/^# deb-src /deb-src /g' /etc/apt/sources.list \
         git \
         libpulse-dev \
         pulseaudio \
-    && apt-get build-dep -y pulseaudio \
-    && apt-get source pulseaudio \
-    && rm -rf /var/lib/apt/lists/*
+        autoconf \
+        libtool \
+        sudo \
+        ca-certificates \
+        lsb-release
 
-RUN cd /pulseaudio-$(pulseaudio --version | awk '{print $2}') \
-    && ./configure
-
-RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git /pulseaudio-module-xrdp \
-    && cd /pulseaudio-module-xrdp \
+# Install xRDP. Adaptation of installation instructions for Docker: https://c-nergy.be/blog/?p=17734
+RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git \
+    && cd pulseaudio-module-xrdp \
+    && ./scripts/install_pulseaudio_sources_apt.sh \
     && ./bootstrap \
-    && ./configure PULSE_DIR=/pulseaudio-$(pulseaudio --version | awk '{print $2}') \
+    && PULSE_DIR=~/pulseaudio.src ./configure \
     && make \
     && make install
-
 
 # Build the final image
 FROM ubuntu:$TAG
