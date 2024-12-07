@@ -3,7 +3,7 @@
 ARG TAG=latest
 FROM ubuntu:$TAG as builder
 
-RUN sed -i -E 's/^# deb-src /deb-src /g' /etc/apt/sources.list \
+RUN sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources \
     && apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         build-essential \
