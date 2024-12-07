@@ -14,7 +14,7 @@ jobs:
         run: |
           ubuntu_codename=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ {print tolower($2); exit}' | sed s/\'//)
           echo "Latest Ubuntu LTS Code Name: $ubuntu_codename"
-          echo "::set-output name=ubuntu_codename::$ubuntu_codename"
+          echo "ubuntu_codename=$ubuntu_codename" >> "$GITHUB_ENV"
       -
         name: Checkout
         uses: actions/checkout@v2
@@ -28,8 +28,6 @@ jobs:
         name: Build
         id: docker_build
         uses: docker/build-push-action@v2
-        env:
-          ubuntu_codename: ${{ steps.docker.outputs.ubuntu_codename }}
         with:
           build-args: |
             TAG=${{ env.ubuntu_codename }}
