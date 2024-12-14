@@ -17,6 +17,7 @@ RUN apt-get update \
         xorgxrdp \
         xrdp \
         xubuntu-icon-theme \
+    && sudo apt remove -y xfburn ristretto xfce4-dict \
     && sudo apt autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -139,11 +140,11 @@ RUN usermod -aG sudo,xrdp,ssl-cert ${USERNAME}
 ENV entry=/usr/bin/entrypoint
 RUN cat <<EOF > /usr/bin/entrypoint
 #!/usr/bin/env bash
-  # Create the user account
+  sudo chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
+
+  # Create the ubuntu account
   groupadd --gid 1020 ubuntu
   useradd --shell /bin/bash --uid 1020 --gid 1020 --password $(openssl passwd ubuntu) --create-home --home-dir /home/ubuntu ubuntu
-  # useradd --shell /bin/bash --uid 1020 --gid 1020 --password ubuntu --create-home --home-dir /home/ubuntu ubuntu
-  # echo "ubuntu:ubuntu" | chpasswd
   usermod -aG sudo ubuntu
 
   # Start xrdp sesman service
