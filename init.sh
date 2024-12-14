@@ -1,5 +1,6 @@
 # Common functions for docker
 # Usage: dstop; dstop; dbuild && drun && sleep 2 && dxrdp
+# Delete all docker images: docker system prune -a
 
 DOCKER_IMAGE_NAME=remote-desktop
 function dbuild { docker build -t ${DOCKER_IMAGE_NAME} . ; }
