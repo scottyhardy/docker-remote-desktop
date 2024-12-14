@@ -1,3 +1,5 @@
+# Common functions for docker
+# Usage: dstop; dbuild && drun && sleep 1 && dxrdp
 
 DOCKER_IMAGE_NAME=remote-desktop
 function dbuild { docker build -t ${DOCKER_IMAGE_NAME} . ; }
@@ -11,10 +13,10 @@ function dall   { dstop; dbuild; drun; }
 
   echo "# xrdp --version" > logs/xrdp-version.log
   dbash xrdp --version   >> logs/xrdp-version.log
-  
+
   echo "# cat /var/log/xrdp.log" > logs/xrdp.log
   dbash cat /var/log/xrdp.log   >> logs/xrdp.log
-   
+
   echo "# cat /var/log/xrdp-sesman.log" > logs/xrdp-sesman.log
   dbash cat /var/log/xrdp-sesman.log   >> logs/xrdp-sesman.log
 
