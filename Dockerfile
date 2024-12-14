@@ -24,7 +24,7 @@ RUN <<-EOF
 	export DEBIAN_FRONTEND=noninteractive
 	apt-get update
 	apt-get install -y --no-install-recommends -o APT::Immediate-Configure=0 \
-	  git curl lsb-release dbus dbus-x11 vim \
+	  git curl lsb-release dbus dbus-x11 vim chpasswd \
       xfce4-clipman-plugin \
       xfce4-cpufreq-plugin \
       xfce4-cpugraph-plugin \
@@ -59,11 +59,10 @@ EOF
 # RUN useradd -m -s /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd && adduser ${USERNAME} sudo
 
 # Create a new user and add to the sudo group:
-RUN apt-get update && apt-get install -y sudo passwd
-RUN useradd -m -s /bin/bash demo && echo 'demo:demo' | chpasswd
-# RUN apt-get install -d ssl-cert
-RUN usermod -aG sudo,xrdp,ssl-cert demo
-# USER demo
+ENV USERNAME=demo
+ARG PASSWORD=changeit
+RUN useradd -m -s /bin/bash demo && echo "${USERNAME}:${PASSWORD}" | chpasswd
+RUN usermod -aG sudo,xrdp,ssl-cert ${USERNAME}
 
 # Create a start script:
 ENV entry=/usr/bin/entrypoint
