@@ -53,15 +53,10 @@ EOF
 # RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 # RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
 
-# Create a new user and add to the sudo group
-# ENV USERNAME=demo
-# ARG PASSWORD=changeit
-# RUN useradd -m -s /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd && adduser ${USERNAME} sudo
-
 # Create a new user and add to the sudo group:
 ENV USERNAME=demo
 ARG PASSWORD=changeit
-RUN useradd -m -s /bin/bash demo && echo "${USERNAME}:${PASSWORD}" | chpasswd
+RUN useradd -ms /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd
 RUN usermod -aG sudo,xrdp,ssl-cert ${USERNAME}
 
 # Create a start script:
