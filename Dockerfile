@@ -5,6 +5,7 @@ ARG TAG=noble
 FROM ubuntu:$TAG
 
 RUN apt-get update \
+    && apt-get upgrade -y \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         dbus-x11 \
         git \
@@ -16,6 +17,7 @@ RUN apt-get update \
         xorgxrdp \
         xrdp \
         xubuntu-icon-theme \
+    && sudo apt autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -115,11 +117,12 @@ RUN <<-EOF
 EOF
 
 # Firefox (snap fails)
+RUN apt update && apt install -y wget && apt clean
 RUN install -d -m 0755 /etc/apt/keyrings && \
     wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null && \
     echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null && \
     echo "Package: *\nPin: origin packages.mozilla.org\nPin-Priority: 1000" | tee /etc/apt/preferences.d/mozilla
-RUN apt update && apt-get install -y firefox && apt-get clean
+RUN apt update && apt-get install -y firefox && apt clean
 
 ### install chrome
 # RUN apt-get update && apt-get install -y wget && apt-get install -y zip
