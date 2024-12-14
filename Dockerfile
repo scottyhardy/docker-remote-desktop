@@ -59,9 +59,9 @@ RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd6
 RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
 
 # Create a new user and add to the sudo group
-ENV USERNAME=demo
-ARG PASSWORD=changeit
-RUN useradd -m -s /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd && adduser ${USERNAME} sudo
+# ENV USERNAME=demo
+# ARG PASSWORD=changeit
+# RUN useradd -m -s /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd && adduser ${USERNAME} sudo
 
 # Create a start script:
 ENV entry=/usr/bin/entrypoint
@@ -86,7 +86,6 @@ RUN cat <<EOF > /usr/bin/entrypoint
   fi
 EOF
 RUN chmod +x /usr/bin/entrypoint
-
 
 RUN locale-gen en_US.UTF-8
 ENV LANG=en_US.UTF-8
