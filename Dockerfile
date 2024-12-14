@@ -7,7 +7,6 @@ FROM ubuntu:$TAG
 RUN apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         dbus-x11 \
-        firefox \
         git \
         locales \
         sudo \
@@ -24,7 +23,7 @@ RUN <<-EOF
 	export DEBIAN_FRONTEND=noninteractive
 	apt-get update
 	apt-get install -y --no-install-recommends -o APT::Immediate-Configure=0 \
-	  git curl lsb-release dbus dbus-x11 vim chpasswd \
+	  git wget curl lsb-release dbus dbus-x11 vim chpasswd \
       xfce4-clipman-plugin \
       xfce4-cpufreq-plugin \
       xfce4-cpugraph-plugin \
@@ -44,9 +43,83 @@ RUN <<-EOF
    apt-get clean
 EOF
 
+RUN <<-EOF
+	export DEBIAN_FRONTEND=noninteractive
+	apt-get update
+	apt-get install -y --no-install-recommends -o APT::Immediate-Configure=0 \
+		at-spi2-core \
+		ca-certificates \
+		catatonit \
+		curl \
+		dbus \
+		dbus-x11 \
+		gnupg \
+		libbz2-1.0 \
+		libegl1 \
+		libepoxy0 \
+		libfdk-aac2 \
+		libfreetype6 \
+		libfuse2t64 \
+		libgbm1 \
+		libgl1 \
+		libgl1-mesa-dri \
+		libgles2 \
+		libglu1 \
+		libglvnd0 \
+		libglx-mesa0 \
+		libmp3lame0 \
+		libopus0 \
+		libpam0g \
+		libpixman-1-0 \
+		libpulse0 \
+		libssl3t64 \
+		libsystemd0 \
+		libx11-6 \
+		libx11-xcb1 \
+		libxcb-glx0 \
+		libxcb-keysyms1 \
+		libxcb1 \
+		libxext6 \
+		libxfixes3 \
+		libxml2 \
+		libxrandr2 \
+		libxt6t64 \
+		libxtst6 \
+		libxv1 \
+		locales \
+		lsb-release \
+		mesa-opencl-icd \
+		mesa-va-drivers \
+		mesa-vdpau-drivers \
+		mesa-vulkan-drivers \
+		ocl-icd-opencl-dev \
+		openssh-server \
+		openssl \
+		perl-base \
+		policykit-1 \
+		pulseaudio \
+		runit \
+		tzdata \
+		udev \
+		xauth \
+		xkb-data \
+		xserver-xorg-core \
+		xserver-xorg-input-evdev \
+		xserver-xorg-input-joystick \
+		xserver-xorg-input-libinput \
+		xserver-xorg-video-dummy \
+		xserver-xorg-video-fbdev \
+		xserver-xorg-video-vesa \
+		zlib1g \
+	&& apt-get clean
+EOF
+
 # Firefox (snap fails)
-# RUN wget -O /tmp/firefox.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US"
-# RUN tar xjf /tmp/firefox.tar.bz2 && sudo ln -s /firefox/firefox /usr/bin/firefox
+RUN install -d -m 0755 /etc/apt/keyrings && \
+    wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null && \
+    echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null && \
+    echo "Package: *\nPin: origin packages.mozilla.org\nPin-Priority: 1000" | tee /etc/apt/preferences.d/mozilla
+RUN apt update && apt-get install -y firefox && apt-get clean
 
 ### install chrome
 # RUN apt-get update && apt-get install -y wget && apt-get install -y zip

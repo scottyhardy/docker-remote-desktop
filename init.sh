@@ -1,16 +1,15 @@
 # Common functions for docker
-# Usage: dstop; dbuild && drun && sleep 1 && dxrdp
+# Usage: dstop; dstop; dbuild && drun && sleep 2 && dxrdp
 
 DOCKER_IMAGE_NAME=remote-desktop
 function dbuild { docker build -t ${DOCKER_IMAGE_NAME} . ; }
 function drun   { docker run -d --shm-size 2g --rm --name ${DOCKER_IMAGE_NAME}_01 -p 3389:3389/tcp ${DOCKER_IMAGE_NAME} ; }
 function dbash  { docker exec -it ${DOCKER_IMAGE_NAME}_01 "$@" ; }
-function dxrdp  { xfreerdp /v:localhost:3389 /u:ubuntu ; }
+function dxrdp  { xfreerdp /v:localhost:3389 /u:demo ; }
 function dstop  { docker container stop ${DOCKER_IMAGE_NAME}_01 ; }
 function dssh   { ssh demo@localhost -p 2222 "$@" ;}
+function dall   { dstop; dbuild && drun && sleep 2 && dxrdp; }
 function dlogs  { mkdir -p logs/
-function dall   { dstop; dbuild; drun; }
-
   echo "# xrdp --version" > logs/xrdp-version.log
   dbash xrdp --version   >> logs/xrdp-version.log
 
