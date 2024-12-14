@@ -24,7 +24,7 @@ RUN <<-EOF
 	export DEBIAN_FRONTEND=noninteractive
 	apt-get update
 	apt-get install -y --no-install-recommends -o APT::Immediate-Configure=0 \
-		git curl lsb-release dbus dbus-x11 vim \
+	  git curl lsb-release dbus dbus-x11 vim \
       xfce4-clipman-plugin \
       xfce4-cpufreq-plugin \
       xfce4-cpugraph-plugin \
@@ -48,20 +48,22 @@ EOF
 # RUN wget -O /tmp/firefox.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US"
 # RUN tar xjf /tmp/firefox.tar.bz2 && sudo ln -s /firefox/firefox /usr/bin/firefox
 
-# Install Browser
-# please review all the latest versions here:
-# https://googlechromelabs.github.io/chrome-for-testing/
-ENV CHROMEDRIVER_VERSION=120.0.6099.71
-
 ### install chrome
-RUN apt-get update && apt-get install -y wget && apt-get install -y zip
-RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
+# RUN apt-get update && apt-get install -y wget && apt-get install -y zip
+# RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+# RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
 
 # Create a new user and add to the sudo group
 # ENV USERNAME=demo
 # ARG PASSWORD=changeit
 # RUN useradd -m -s /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd && adduser ${USERNAME} sudo
+
+# Create a new user and add to the sudo group:
+RUN apt-get update && apt-get install -y sudo passwd
+RUN useradd -m -s /bin/bash demo && echo 'demo:demo' | chpasswd
+# RUN apt-get install -d ssl-cert
+RUN usermod -aG sudo,xrdp,ssl-cert demo
+# USER demo
 
 # Create a start script:
 ENV entry=/usr/bin/entrypoint
@@ -77,13 +79,9 @@ RUN cat <<EOF > /usr/bin/entrypoint
   # Start xrdp sesman service
   /usr/sbin/xrdp-sesman
 
-  # Run xrdp in foreground if no commands specified
-  if [ -z "$1" ]; then
-    /usr/sbin/xrdp --nodaemon
-  else
-    /usr/sbin/xrdp
-    exec "$@"
-  fi
+  service dbus start
+  service xrdp start
+  tail -f /dev/null
 EOF
 RUN chmod +x /usr/bin/entrypoint
 
