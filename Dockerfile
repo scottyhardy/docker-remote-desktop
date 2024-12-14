@@ -4,9 +4,11 @@
 ARG TAG=noble
 FROM ubuntu:$TAG
 
-RUN apt-get update \
-    && apt-get upgrade -y \
-    && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
+RUN <<-EOF
+	export DEBIAN_FRONTEND=noninteractive
+	apt-get update
+    apt-get upgrade -y
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         dbus-x11 \
         git \
         locales \
@@ -16,33 +18,34 @@ RUN apt-get update \
         xfce4-goodies \
         xorgxrdp \
         xrdp \
-        xubuntu-icon-theme \
-    && sudo apt remove -y xfburn ristretto xfce4-dict \
-    && sudo apt autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+        xubuntu-icon-theme
+    sudo apt remove -y xfburn ristretto xfce4-dict
+    sudo apt autoremove -y
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+EOF
 
 RUN <<-EOF
 	export DEBIAN_FRONTEND=noninteractive
 	apt-get update
 	apt-get install -y --no-install-recommends -o APT::Immediate-Configure=0 \
 	  git wget curl lsb-release dbus dbus-x11 vim chpasswd \
-      xfce4-clipman-plugin \
-      xfce4-cpufreq-plugin \
-      xfce4-cpugraph-plugin \
-      xfce4-diskperf-plugin \
-      xfce4-datetime-plugin \
-      xfce4-fsguard-plugin \
-      xfce4-genmon-plugin \
-      xfce4-indicator-plugin \
-      xfce4-netload-plugin \
-      xfce4-places-plugin \
-      xfce4-sensors-plugin \
-      xfce4-smartbookmark-plugin \
-      xfce4-systemload-plugin \
-      xfce4-timer-plugin \
-      xfce4-verve-plugin \
-      xfce4-weather-plugin
+          xfce4-clipman-plugin \
+          xfce4-cpufreq-plugin \
+          xfce4-cpugraph-plugin \
+          xfce4-diskperf-plugin \
+          xfce4-datetime-plugin \
+          xfce4-fsguard-plugin \
+          xfce4-genmon-plugin \
+          xfce4-indicator-plugin \
+          xfce4-netload-plugin \
+          xfce4-places-plugin \
+          xfce4-sensors-plugin \
+          xfce4-smartbookmark-plugin \
+          xfce4-systemload-plugin \
+          xfce4-timer-plugin \
+          xfce4-verve-plugin \
+          xfce4-weather-plugin
    apt-get clean
 EOF
 
@@ -125,23 +128,17 @@ RUN install -d -m 0755 /etc/apt/keyrings && \
     echo "Package: *\nPin: origin packages.mozilla.org\nPin-Priority: 1000" | tee /etc/apt/preferences.d/mozilla
 RUN apt update && apt-get install -y firefox && apt clean
 
-### install chrome
-# RUN apt-get update && apt-get install -y wget && apt-get install -y zip
-# RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-# RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
-
 # Create a new user and add to the sudo group:
 ENV USERNAME=demo
 ARG PASSWORD=changeit
-RUN useradd -ms /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd
-RUN usermod -aG sudo,xrdp,ssl-cert ${USERNAME}
+RUN useradd -ms /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd && usermod -aG sudo,xrdp,ssl-cert ${USERNAME}
+COPY xfce-config/.config /home/${USERNAME}
+RUN chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
 
 # Create a start script:
 ENV entry=/usr/bin/entrypoint
 RUN cat <<EOF > /usr/bin/entrypoint
 #!/usr/bin/env bash
-  sudo chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
-
   # Create the ubuntu account
   groupadd --gid 1020 ubuntu
   useradd --shell /bin/bash --uid 1020 --gid 1020 --password $(openssl passwd ubuntu) --create-home --home-dir /home/ubuntu ubuntu
