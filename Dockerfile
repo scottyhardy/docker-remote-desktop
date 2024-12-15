@@ -25,99 +25,20 @@ RUN <<-EOF
 EOF
 
 RUN <<-EOF
-	export DEBIAN_FRONTEND=noninteractive
 	apt-get update
-	apt-get install -y --no-install-recommends -o APT::Immediate-Configure=0 \
-	  git wget curl lsb-release dbus dbus-x11 vim chpasswd \
-      xfce4-clipman-plugin \
-      xfce4-cpufreq-plugin \
-      xfce4-cpugraph-plugin \
-      xfce4-diskperf-plugin \
-      xfce4-datetime-plugin \
-      xfce4-fsguard-plugin \
-      xfce4-genmon-plugin \
-      xfce4-indicator-plugin \
-      xfce4-netload-plugin \
-      xfce4-places-plugin \
-      xfce4-sensors-plugin \
-      xfce4-smartbookmark-plugin \
-      xfce4-systemload-plugin \
-      xfce4-timer-plugin \
-      xfce4-verve-plugin \
-      xfce4-weather-plugin \
-      xfce4-whiskermenu-plugin
-   apt-get clean
-EOF
-
-RUN <<-EOF
-	export DEBIAN_FRONTEND=noninteractive
-	apt-get update
-	apt-get install -y --no-install-recommends -o APT::Immediate-Configure=0 \
-		at-spi2-core \
+	DEBIAN_FRONTEND="noninteractive" apt-get install -y \
 		ca-certificates \
-		catatonit \
-		curl \
-		dbus \
-		dbus-x11 \
 		gnupg \
-		libbz2-1.0 \
-		libegl1 \
-		libepoxy0 \
-		libfdk-aac2 \
-		libfreetype6 \
-		libfuse2t64 \
-		libgbm1 \
-		libgl1 \
-		libgl1-mesa-dri \
-		libgles2 \
-		libglu1 \
-		libglvnd0 \
-		libglx-mesa0 \
-		libmp3lame0 \
-		libopus0 \
-		libpam0g \
-		libpixman-1-0 \
-		libpulse0 \
-		libssl3t64 \
-		libsystemd0 \
-		libx11-6 \
-		libx11-xcb1 \
-		libxcb-glx0 \
-		libxcb-keysyms1 \
-		libxcb1 \
-		libxext6 \
-		libxfixes3 \
-		libxml2 \
-		libxrandr2 \
-		libxt6t64 \
-		libxtst6 \
-		libxv1 \
-		locales \
 		lsb-release \
-		mesa-opencl-icd \
-		mesa-va-drivers \
-		mesa-vdpau-drivers \
-		mesa-vulkan-drivers \
-		ocl-icd-opencl-dev \
 		openssh-server \
 		openssl \
-		perl-base \
-		policykit-1 \
-		pulseaudio \
-		runit \
-		tzdata \
-		udev \
 		xauth \
-		xkb-data \
-		xserver-xorg-core \
-		xserver-xorg-input-evdev \
-		xserver-xorg-input-joystick \
-		xserver-xorg-input-libinput \
-		xserver-xorg-video-dummy \
-		xserver-xorg-video-fbdev \
-		xserver-xorg-video-vesa \
-		zlib1g \
-	&& apt-get clean
+	    curl \
+	    git \
+	    lsb-release \
+	    vim chpasswd \
+	    wget
+	apt-get clean
 EOF
 
 # Firefox (snap fails)
@@ -132,7 +53,7 @@ RUN apt update && apt-get install -y firefox && apt clean
 ENV USERNAME=demo
 ARG PASSWORD=changeit
 RUN useradd -ms /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd
-RUN usermod -aG sudo,xrdp,ssl-cert ${USERNAME}
+RUN usermod -aG sudo,xrdp ${USERNAME}
 
 # Create a start script:
 ENV entry=/usr/bin/entrypoint
