@@ -19,7 +19,7 @@ RUN <<-EOF
         xorgxrdp \
         xrdp \
         xubuntu-icon-theme
-    sudo apt remove -y xfburn ristretto xfce4-dict
+    sudo apt remove -y xfburn ristretto
     sudo apt autoremove -y
     apt-get clean
     rm -rf /var/lib/apt/lists/*
@@ -45,7 +45,8 @@ RUN <<-EOF
           xfce4-systemload-plugin \
           xfce4-timer-plugin \
           xfce4-verve-plugin \
-          xfce4-weather-plugin
+          xfce4-weather-plugin \
+          xfce4-whiskermenu-plugin
    apt-get clean
 EOF
 
@@ -131,22 +132,26 @@ RUN apt update && apt-get install -y firefox && apt clean
 # Create a new user and add to the sudo group:
 ENV USERNAME=demo
 ARG PASSWORD=changeit
-RUN useradd -ms /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd && usermod -aG sudo,xrdp,ssl-cert ${USERNAME}
-COPY xfce-config/.config /home/${USERNAME}
-RUN chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
+RUN useradd -ms /bin/bash --uid 1022 --gid 1022 ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd && usermod -aG sudo,xrdp,ssl-cert ${USERNAME}
+# RUN useradd -ms /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd && usermod -aG sudo,xrdp,ssl-cert ${USERNAME}
+COPY xfce-config/.config /home/xfce-config/
+RUN chown -R ${USERNAME}:${USERNAME} /home/xfce-config/
 
 # Create a start script:
 ENV entry=/usr/bin/entrypoint
 RUN cat <<EOF > /usr/bin/entrypoint
 #!/usr/bin/env bash
+
+  # Restore Xfce configurations on the container start
+  cp -r /home/xfce-config/.config /home/${USERNAME}
+  chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
+
   # Create the ubuntu account
   groupadd --gid 1020 ubuntu
   useradd --shell /bin/bash --uid 1020 --gid 1020 --password $(openssl passwd ubuntu) --create-home --home-dir /home/ubuntu ubuntu
-  usermod -aG sudo ubuntu
+  usermod -aG sudo,xrdp,ssl-cert ubuntu
 
-  # Start xrdp sesman service
-  /usr/sbin/xrdp-sesman
-
+  # Start xrdp services
   service dbus start
   service xrdp start
   tail -f /dev/null
