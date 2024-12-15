@@ -16,7 +16,7 @@ function dxrdp  { xfreerdp /v:localhost:3389 /u:$DOCKER_USER ;}
 function dstop  { docker container stop ${DOCKER_IMAGE_NAME}_01 ;}
 function dssh   { ssh $DOCKER_USER@localhost -p 2222 "$@" ;}
 function dall   { dstop; dbuild && drun && sleep 2 && dxrdp ;}
-function dpruneall { docker system prune -a && rm -rf home/ ;}
+function dpruneall { sudo docker system prune -a && sudo rm -rf home/ ;}
 function dlogs  { mkdir -p logs/
   echo "# xrdp --version" > logs/xrdp-version.log
   dbash xrdp --version   >> logs/xrdp-version.log
