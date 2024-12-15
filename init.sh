@@ -1,6 +1,5 @@
 # Common functions for docker
 # Usage: dstop; dstop; dbuild && drun && sleep 2 && dxrdp
-# Delete all docker images: docker system prune -a
 
 DOCKER_IMAGE_NAME=remote-desktop
 DOCKER_USER=demo
@@ -12,11 +11,12 @@ function drun {
          -p 3389:3389/tcp \
          -v $(pwd)/home/$DOCKER_USER:/home/$DOCKER_USER ${DOCKER_IMAGE_NAME};
 }
-function dbash  { docker exec -it ${DOCKER_IMAGE_NAME}_01 "$@" ; }
-function dxrdp  { xfreerdp /v:localhost:3389 /u:$DOCKER_USER ; }
-function dstop  { docker container stop ${DOCKER_IMAGE_NAME}_01 ; }
+function dbash  { docker exec -it ${DOCKER_IMAGE_NAME}_01 "$@" ;}
+function dxrdp  { xfreerdp /v:localhost:3389 /u:$DOCKER_USER ;}
+function dstop  { docker container stop ${DOCKER_IMAGE_NAME}_01 ;}
 function dssh   { ssh $DOCKER_USER@localhost -p 2222 "$@" ;}
-function dall   { dstop; dbuild && drun && sleep 2 && dxrdp; }
+function dall   { dstop; dbuild && drun && sleep 2 && dxrdp ;}
+function dpruneall { docker system prune -a && rm -rf home/ ;}
 function dlogs  { mkdir -p logs/
   echo "# xrdp --version" > logs/xrdp-version.log
   dbash xrdp --version   >> logs/xrdp-version.log
