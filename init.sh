@@ -1,6 +1,7 @@
 # Common functions for docker
 # Usage: dstop; dstop; dbuild && drun && sleep 2 && dxrdp
 
+DOCKER_DIR=$(dirname "$0")
 DOCKER_IMAGE_NAME=remote-desktop
 DOCKER_USER=demo
 function dbuild { docker build -t ${DOCKER_IMAGE_NAME} . ; }
@@ -16,10 +17,10 @@ function dxrdp  { xfreerdp /v:localhost:3389 /u:$DOCKER_USER ;}
 function dstop  { docker container stop ${DOCKER_IMAGE_NAME}_01 ;}
 function dssh   { ssh $DOCKER_USER@localhost -p 2222 "$@" ;}
 function dall   { dstop; dbuild && drun && sleep 2 && dxrdp ;}
-function dpruneall { sudo docker system prune -a && sudo rm -rf home/ ;}
-function dlogs  { mkdir -p logs/
-  echo "# xrdp --version" > logs/xrdp-version.log
-  dbash xrdp --version   >> logs/xrdp-version.log
+function dpruneall { sudo docker system prune -a && sudo rm -rf "$DOCKER_DIR/home/" ;}
+function dlogs  {
+  cd "$DOCKER_DIR" || exit 1
+  mkdir -p "$DOCKER_DIR/logs/"
 
   echo "# cat /var/log/xrdp.log" > logs/xrdp.log
   dbash cat /var/log/xrdp.log   >> logs/xrdp.log
