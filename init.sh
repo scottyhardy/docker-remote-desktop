@@ -7,10 +7,11 @@ DOCKER_USER=demo
 function dbuild { cd "$DOCKER_DIR" && docker build -t ${DOCKER_IMAGE_NAME} . ; }
 function drun {
   mkdir mkdir -p home/$DOCKER_USER
-  docker run -d --shm-size 2g --rm \
-         --name ${DOCKER_IMAGE_NAME}_01 \
-         -p 3389:3389/tcp \
-         -v $(pwd)/home/$DOCKER_USER:/home/$DOCKER_USER ${DOCKER_IMAGE_NAME};
+  docker run -d --rm --shm-size 2g \
+         --name "${DOCKER_IMAGE_NAME}_01" \
+         -p "3389:3389/tcp" \
+         -v "$(pwd)/home/${DOCKER_USER}:/home/${DOCKER_USER}" \
+         ${DOCKER_IMAGE_NAME}
 }
 function dbash  { docker exec -it ${DOCKER_IMAGE_NAME}_01 "$@" ;}
 function dxrdp  { xfreerdp /size:1920x1000 /bpp:32 /v:localhost:3389 /u:$DOCKER_USER ;}
