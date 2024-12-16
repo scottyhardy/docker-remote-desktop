@@ -90,6 +90,8 @@ ENV USERNAME=demo
 ARG PASSWORD=changeit
 RUN useradd -ms /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd
 RUN usermod -aG sudo,xrdp ${USERNAME}
+COPY xfce-config/.config /home/${USERNAME}
+RUN chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
 
 # Create a start script:
 ENV entry=/usr/bin/entrypoint
