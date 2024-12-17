@@ -90,20 +90,13 @@ ENV USERNAME=demo
 ARG PASSWORD=changeit
 RUN useradd -ms /bin/bash ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd
 RUN usermod -aG sudo,xrdp ${USERNAME}
-COPY xfce-config/.config /home/${USERNAME}
-RUN chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
+#COPY xfce-config/.config /home/${USERNAME}
+#RUN chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
 
 # Create a start script:
 ENV entry=/usr/bin/entrypoint
 RUN cat <<EOF > /usr/bin/entrypoint
-#!/usr/bin/env bash
-  sudo chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
-
-  # Create the ubuntu account
-  groupadd --gid 1020 ubuntu
-  useradd --shell /bin/bash --uid 1020 --gid 1020 --password $(openssl passwd ubuntu) --create-home --home-dir /home/ubuntu ubuntu
-  usermod -aG sudo,xrdp ubuntu
-
+#!/bin/bash -v
   service dbus start
   service xrdp start
   tail -f /dev/null
