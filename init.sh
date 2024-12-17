@@ -10,7 +10,7 @@ function drun {
   docker run -d --rm --shm-size 2g \
          --name "${DOCKER_IMAGE_NAME}_01" \
          -p "3389:3389/tcp" \
-         -v "$(pwd)/home/${DOCKER_USER}:/home/${DOCKER_USER}_" \
+         -v "$(pwd)/home/${DOCKER_USER}:/home/${DOCKER_USER}" \
          ${DOCKER_IMAGE_NAME}
 }
 function dbash  { docker exec -it ${DOCKER_IMAGE_NAME}_01 "$@" ;}
