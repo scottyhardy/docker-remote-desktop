@@ -2,7 +2,7 @@
 
 [![build](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml/badge.svg)](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml)
 
-Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu 24.10 LTS with [XFCE](https://xfce.org) with Windows like look.
+Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu 24.10 LTS with [XFCE](https://xfce.org) with a Windows type look.
 This project is based on the parent [docker-remote-desktop](https://github.com/scottyhardy/docker-remote-desktop) project.
 
 ## Build local docker image, run container and open RDP client:

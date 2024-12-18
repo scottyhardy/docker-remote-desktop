@@ -1,5 +1,5 @@
-# Common functions for docker
-# Usage: . init.sh; dstop; dstop; dbuild; drun; dxrdp
+# Common functions for the docker project: ubuntu-docker-desktop-xrdp
+# Usage: . init.sh; dbuild; drun; dxrdp
 
 DOCKER_DIR=$(dirname "$0")
 DOCKER_IMAGE_NAME=remote-desktop
