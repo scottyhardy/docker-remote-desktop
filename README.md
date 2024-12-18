@@ -4,6 +4,7 @@
 
 Docker container for RDP client based on Ubuntu 24.10 LTS with [XFCE](https://xfce.org) with a Windows like look.
 The home directory of the `demo` user inside the Docker container is persistent and is mapped to the `./home` directory on the host machine, ensuring data remains accessible between container restarts.
+Audio is not supported.
 This project is forked from the parent [docker-remote-desktop](https://github.com/scottyhardy/docker-remote-desktop) project.
 
 ## Build local docker image, run container and open RDP client:

@@ -19,7 +19,7 @@ function drun {
 # Run a command or bash.
 function dbash  { docker exec -it ${DOCKER_IMAGE_NAME}_01 "$@" ;}
 # Run Xrdp client.
-function dxrdp  { xfreerdp /size:1200x800 /bpp:32 /v:localhost:3389 /u:$DOCKER_USER ;}
+function dxrdp  { xfreerdp /size:1920x1000 /bpp:32 /v:localhost:3389 /u:$DOCKER_USER ;}
 # Stop the docker container
 function dstop  { docker container stop ${DOCKER_IMAGE_NAME}_01 ;}
 # Run the ssh client.
