@@ -58,9 +58,7 @@ RUN <<-EOF
 	apt-get update
 	apt-get -y install --no-install-recommends \
         xfce4 \
-        xfce4-goodies
-
-	apt-get -y install --no-install-recommends \
+        xfce4-goodies \
         xfce4-battery-plugin \
         xfce4-clipman-plugin \
         xfce4-cpufreq-plugin \
@@ -84,8 +82,6 @@ RUN <<-EOF
         xfce4-whiskermenu-plugin \
         xubuntu-icon-theme
 
-	apt-get -y remove xfburn ristretto xfce4-dict
-    apt-get -y autoremove
     apt-get clean
     rm -rf /var/lib/apt/lists/*
 EOF
