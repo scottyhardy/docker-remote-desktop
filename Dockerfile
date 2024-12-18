@@ -12,31 +12,35 @@ RUN <<-EOF
     apt-get -y upgrade
     apt-get -y install --no-install-recommends \
         apt-utils \
+        ca-certificates \
         dbus-x11 \
         locales \
+        openssh-server \
+        openssl \
         xorgxrdp \
         xrdp
 
 	apt-get -y install --no-install-recommends \
-        ca-certificates \
         chpasswd \
         curl \
         git \
         gnupg \
         lsb-release \
-        mesa-utils \
-        mesa-utils-extra \
-        openssh-server \
-        openssl \
         psmisc \
         vim \
-        wget \
+        wget
+
+	apt-get -y install --no-install-recommends \
+        mesa-utils \
+        mesa-utils-extra \
         x11-utils \
         x11-xserver-utils \
         xauth \
-        xdg-utils
+        xdg-utils \
 
-    apt-get -y install --no-install-recommends sudo
+	apt-get -y install --no-install-recommends \
+        sudo
+
     apt-get clean
     rm -rf /var/lib/apt/lists/*
 EOF
@@ -54,7 +58,9 @@ RUN <<-EOF
 	apt-get update
 	apt-get -y install --no-install-recommends \
         xfce4 \
-        xfce4-goodies \
+        xfce4-goodies
+
+	apt-get -y install --no-install-recommends \
         xfce4-battery-plugin \
         xfce4-clipman-plugin \
         xfce4-cpufreq-plugin \
@@ -77,7 +83,6 @@ RUN <<-EOF
         xfce4-weather-plugin \
         xfce4-whiskermenu-plugin \
         xubuntu-icon-theme
-	apt-get clean
 
 	apt-get -y remove xfburn ristretto xfce4-dict
     apt-get -y autoremove
@@ -97,10 +102,6 @@ RUN usermod -aG sudo,xrdp ${USERNAME}
 ENV entry=/usr/bin/entrypoint
 RUN cat <<EOF > /usr/bin/entrypoint
 #!/bin/bash -v
-  # Demox
-  sudo useradd -ms /bin/bash ${USERNAME}x && echo "${USERNAME}x:${PASSWORD}" | chpasswd
-  sudo usermod -aG sudo,xrdp ${USERNAME}x
-
   sudo chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
   service dbus start
   service xrdp start
