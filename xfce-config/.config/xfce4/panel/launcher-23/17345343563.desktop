@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Name=Color Profiles
+Comment=Set color profiles
+Keywords=color;settings;management;display;monitors;printers;webcams;scanners;
+Exec=xfce4-color-settings
+Icon=org.xfce.settings.color
+Terminal=false
+Type=Application
+Categories=XFCE;GTK;Settings;DesktopSettings;X-XFCE-SettingsDialog;X-XFCE-HardwareSettings;
+StartupNotify=true
+OnlyShowIn=XFCE;
+X-XfcePluggable=true
+X-XfceHelpPage=color
+X-XFCE-Source=file:///usr/share/applications/xfce4-color-settings.desktop
