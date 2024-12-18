@@ -1,0 +1,30 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Exec=firefox %u
+Terminal=false
+X-MultipleArgs=false
+Icon=firefox
+StartupWMClass=firefox
+Categories=GNOME;GTK;Network;WebBrowser;
+MimeType=application/json;application/pdf;application/rdf+xml;application/rss+xml;application/x-xpinstall;application/xhtml+xml;application/xml;audio/flac;audio/ogg;audio/webm;image/avif;image/gif;image/jpeg;image/png;image/svg+xml;image/webp;text/html;text/xml;video/ogg;video/webm;x-scheme-handler/chrome;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/mailto;
+StartupNotify=true
+Actions=new-window;new-private-window;open-profile-manager;
+Name=Firefox
+Comment=Browse the World Wide Web
+GenericName=Web Browser
+Keywords=Internet;WWW;Browser;Web;Explorer;
+X-GNOME-FullName=Firefox Web Browser
+X-XFCE-Source=file:///usr/share/applications/firefox.desktop
+
+[Desktop Action new-window]
+Exec=firefox --new-window %u
+Name=New Window
+
+[Desktop Action new-private-window]
+Exec=firefox --private-window %u
+Name=New Private Window
+
+[Desktop Action open-profile-manager]
+Exec=firefox --ProfileManager
+Name=Open Profile Manager

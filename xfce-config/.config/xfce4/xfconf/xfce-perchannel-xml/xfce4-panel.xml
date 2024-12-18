@@ -14,6 +14,8 @@
       <property name="size" type="uint" value="34"/>
       <property name="plugin-ids" type="array">
         <value type="int" value="25"/>
+        <value type="int" value="1"/>
+        <value type="int" value="8"/>
         <value type="int" value="2"/>
         <value type="int" value="3"/>
         <value type="int" value="4"/>
@@ -21,6 +23,7 @@
         <value type="int" value="6"/>
         <value type="int" value="10"/>
         <value type="int" value="11"/>
+        <value type="int" value="14"/>
         <value type="int" value="12"/>
         <value type="int" value="13"/>
         <value type="int" value="26"/>
@@ -43,9 +46,9 @@
         <value type="int" value="20"/>
         <value type="int" value="21"/>
         <value type="int" value="22"/>
+        <value type="int" value="23"/>
         <value type="int" value="7"/>
         <value type="int" value="9"/>
-        <value type="int" value="23"/>
       </property>
       <property name="mode" type="uint" value="1"/>
     </property>
@@ -118,7 +121,7 @@
     </property>
     <property name="plugin-23" type="string" value="launcher">
       <property name="items" type="array">
-        <value type="string" value="17345343563.desktop"/>
+        <value type="string" value="17345470981.desktop"/>
       </property>
     </property>
     <property name="plugin-24" type="string" value="actions">
@@ -146,5 +149,16 @@
         <property name="label" type="string" value=""/>
       </property>
     </property>
+    <property name="plugin-1" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="17345474022.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-8" type="string" value="launcher">
+      <property name="items" type="array">
+        <value type="string" value="17345474493.desktop"/>
+      </property>
+    </property>
+    <property name="plugin-14" type="string" value="xkb"/>
   </property>
 </channel>

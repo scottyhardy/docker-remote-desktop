@@ -35,6 +35,7 @@
   </property>
   <property name="desktop-icons" type="empty">
     <property name="icon-size" type="uint" value="60"/>
+    <property name="single-click" type="bool" value="true"/>
   </property>
   <property name="last" type="empty">
     <property name="window-width" type="int" value="806"/>
