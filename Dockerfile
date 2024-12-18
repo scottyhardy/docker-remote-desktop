@@ -95,14 +95,19 @@ ENV USERNAME=demo
 ARG PASSWORD=changeit
 RUN useradd -ms /bin/bash --home-dir /home/${USERNAME} ${USERNAME} && echo "${USERNAME}:${PASSWORD}" | chpasswd
 RUN usermod -aG sudo,xrdp ${USERNAME}
-#COPY xfce-config/.config /home/${USERNAME}
-#RUN chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
+COPY xfce-config/.config /home/xfce-config/.config
 
 # Create a start script:
 ENV entry=/usr/bin/entrypoint
 RUN cat <<EOF > /usr/bin/entrypoint
 #!/bin/bash -v
-  sudo chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
+  cd /home/${USERNAME}
+  DEFAULT_CONFIG_FILE=.config/.default_user_config
+  test ! -d "\$DEFAULT_CONFIG_FILE" && {
+    sudo cp -r /home/xfce-config/.config .
+    sudo chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
+    mkdir -p "\$DEFAULT_CONFIG_FILE"
+  }
   service dbus start
   service xrdp start
   tail -f /dev/null
