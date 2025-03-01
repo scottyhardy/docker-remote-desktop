@@ -12,10 +12,10 @@ jobs:
   get_ubuntu_versions:
     runs-on: ubuntu-latest
     outputs:
-      LATEST_VERSION: ${{ steps.get_versions.outputs.LATEST_VERSION }}
-      LATEST_CODENAME: ${{ steps.get_versions.outputs.LATEST_CODENAME }}
-      PREVIOUS_VERSION: ${{ steps.get_versions.outputs.PREVIOUS_VERSION }}
-      PREVIOUS_CODENAME: ${{ steps.get_versions.outputs.PREVIOUS_CODENAME }}
+      latest_version: ${{ steps.get_versions.outputs.LATEST_VERSION }}
+      latest_codename: ${{ steps.get_versions.outputs.LATEST_CODENAME }}
+      previous_version: ${{ steps.get_versions.outputs.PREVIOUS_VERSION }}
+      previous_codename: ${{ steps.get_versions.outputs.PREVIOUS_CODENAME }}
     steps:
       -
         name: Get Ubuntu versions and codenames
@@ -31,10 +31,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.LATEST_VERSION }}
-            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.LATEST_CODENAME }}
-          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.PREVIOUS_VERSION }}
-            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.PREVIOUS_CODENAME }}
+          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.latest_version }}
+            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.latest_codename }}
+          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.previous_version }}
+            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.previous_codename }}
     steps:
       -
         name: Checkout
