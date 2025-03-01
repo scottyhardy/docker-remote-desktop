@@ -6,6 +6,7 @@ on:
       - master
   schedule:
     - cron: '0 2 * * SUN'
+  workflow_dispatch:
 
 jobs:
   get_ubuntu_versions:
