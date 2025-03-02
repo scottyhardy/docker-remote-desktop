@@ -12,18 +12,20 @@ jobs:
   get_ubuntu_versions:
     runs-on: ubuntu-latest
     outputs:
-      latest_version: ${{ steps.get_versions.outputs.LATEST_VERSION }}
-      latest_codename: ${{ steps.get_versions.outputs.LATEST_CODENAME }}
-      previous_version: ${{ steps.get_versions.outputs.PREVIOUS_VERSION }}
-      previous_codename: ${{ steps.get_versions.outputs.PREVIOUS_CODENAME }}
+      latest_lts_version: ${{ steps.get_versions.outputs.LATEST_LTS_VERSION }}
+      latest_lts_codename: ${{ steps.get_versions.outputs.LATEST_LTS_CODENAME }}
+      previous_lts_version: ${{ steps.get_versions.outputs.PREVIOUS_LTS_VERSION }}
+      previous_lts_codename: ${{ steps.get_versions.outputs.PREVIOUS_LTS_CODENAME }}
     steps:
       - name: Get Ubuntu versions and codenames
         id: get_versions
         run: |
-          echo "LATEST_VERSION=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ {print $1; exit}')" >> $GITHUB_OUTPUT
-          echo "LATEST_CODENAME=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ {print tolower($2); exit}' | sed s/\'//g)" >> $GITHUB_OUTPUT
-          echo "PREVIOUS_VERSION=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ {print $1}' | tail -n +2 | head -n 1)" >> $GITHUB_OUTPUT
-          echo "PREVIOUS_CODENAME=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ {print tolower($2)}' | tail -n +2 | head -n 1 | sed "s/'//g")" >> $GITHUB_OUTPUT
+          {
+            echo "LATEST_LTS_VERSION=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print $1; exit }')"
+            echo "LATEST_LTS_CODENAME=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print tolower($2); exit }' | sed s/\'//g)"
+            echo "PREVIOUS_LTS_VERSION=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print $1 }' | tail -n +2 | head -n 1)"
+            echo "PREVIOUS_LTS_CODENAME=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print tolower($2) }' | tail -n +2 | head -n 1 | sed "s/'//g")"
+          }  >> "$GITHUB_OUTPUT"
 
   docker_build:
     needs: get_ubuntu_versions
@@ -31,10 +33,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.latest_version }}
-            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.latest_codename }}
-          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.previous_version }}
-            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.previous_codename }}
+          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.latest_lts_version }}
+            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.latest_lts_codename }}
+          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.previous_lts_version }}
+            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.previous_lts_codename }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -55,7 +57,7 @@ jobs:
         uses: haya14busa/action-cond@v1.2.0
         id: tags
         with:
-          cond: ${{ matrix.ubuntu_codename == needs.get_ubuntu_versions.outputs.latest_codename }}
+          cond: ${{ matrix.ubuntu_codename == needs.get_ubuntu_versions.outputs.latest_lts_codename }}
           if_true: |
             scottyhardy/docker-remote-desktop:latest,
             scottyhardy/docker-remote-desktop:ubuntu-${{ matrix.ubuntu_codename }},
