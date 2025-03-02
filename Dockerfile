@@ -4,10 +4,14 @@ ARG TAG=latest
 
 FROM ubuntu:$TAG as builder
 
-RUN [ -f /etc/apt/sources.list.d/ubuntu.sources ] \
-    && sed -i -E 's/^(Types: deb|# deb-src )/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources \
-    || sed -i -E 's/^# deb-src /deb-src /g' /etc/apt/sources.list \
-    && apt-get update \
+RUN if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
+      sed -i -E 's/^(Types: deb|# deb-src )/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources; \
+    else \
+      sed -i -E 's/^# deb-src /deb-src /g' /etc/apt/sources.list; \
+    fi
+
+# hadolint ignore=DL3008
+RUN apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         build-essential \
         ca-certificates \
@@ -33,6 +37,7 @@ RUN ./bootstrap \
 # Build the final image
 FROM ubuntu:$TAG
 
+# hadolint ignore=DL3008
 RUN apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         dbus-x11 \
