@@ -56,12 +56,13 @@ jobs:
         uses: haya14busa/action-cond@v1.2.0
         id: tags
         with:
-          cond: ${{ matrix.ubuntu_codename == needs.get_ubuntu_versions.outputs.LATEST_CODENAME }}
+          cond: ${{ matrix.ubuntu_codename == needs.get_ubuntu_versions.outputs.latest_codename }}
           if_true:
             scottyhardy/docker-remote-desktop:latest,
             scottyhardy/docker-remote-desktop:ubuntu-${{ matrix.ubuntu_codename }},
             scottyhardy/docker-remote-desktop:ubuntu-${{ matrix.ubuntu_version }}
           if_false:
+            scottyhardy/docker-remote-desktop:previous-lts,
             scottyhardy/docker-remote-desktop:ubuntu-${{ matrix.ubuntu_codename }},
             scottyhardy/docker-remote-desktop:ubuntu-${{ matrix.ubuntu_version }}
       -
