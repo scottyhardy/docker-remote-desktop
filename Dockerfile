@@ -2,7 +2,7 @@
 # See https://github.com/neutrinolabs/pulseaudio-module-xrdp/wiki/README
 ARG TAG=latest
 
-FROM ubuntu:$TAG as builder
+FROM ubuntu:$TAG AS builder
 
 RUN if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
       sed -i -E "s/^(Types: deb|# deb-src )/Types: deb deb-src/" /etc/apt/sources.list.d/ubuntu.sources; \
