@@ -4,7 +4,9 @@
 
 Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
 
-Images are built weekly using the Ubuntu Docker image with the 'latest' tag.
+Images are built weekly using the latest and previous Ubuntu LTS versions. Use the `previous-lts` tag to access the previous LTS version.
+
+Includes builds for both `linux/amd64` and `linux/arm64` platforms, making it compatible with macOS devices featuring M-series CPUs.
 
 ## Running manually with `docker` commands
 
