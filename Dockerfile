@@ -5,9 +5,9 @@ ARG TAG=latest
 FROM ubuntu:$TAG as builder
 
 RUN if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
-      sed -i -E 's/^(Types: deb|# deb-src )/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources; \
+      sed -i -E "s/^(Types: deb|# deb-src )/Types: deb deb-src/" /etc/apt/sources.list.d/ubuntu.sources; \
     else \
-      sed -i -E 's/^# deb-src /deb-src /g' /etc/apt/sources.list; \
+      sed -i -E "s/^# deb-src /deb-src /g" /etc/apt/sources.list; \
     fi
 
 # hadolint ignore=DL3008
@@ -41,12 +41,13 @@ FROM ubuntu:$TAG
 RUN apt-get update \
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         dbus-x11 \
-        firefox \
         git \
+        gnupg \
         locales \
         pavucontrol \
         pulseaudio \
         pulseaudio-utils \
+        software-properties-common \
         sudo \
         x11-xserver-utils \
         xfce4 \
@@ -57,11 +58,21 @@ RUN apt-get update \
         xubuntu-icon-theme \
     && rm -rf /var/lib/apt/lists/*
 
-RUN sed -i -E 's/^; autospawn =.*/autospawn = yes/' /etc/pulse/client.conf \
-    && [ -f /etc/pulse/client.conf.d/00-disable-autospawn.conf ] && sed -i -E 's/^(autospawn=.*)/# \1/' /etc/pulse/client.conf.d/00-disable-autospawn.conf || : \
-    && locale-gen en_US.UTF-8
+# Add Mozilla Team PPA and install Firefox instead of using default snap package
+# hadolint ignore=DL3008
+RUN add-apt-repository -y ppa:mozillateam/ppa \
+    && printf "Package: *\nPin: release o=LP-PPA-mozillateam\nPin-Priority: 1001\n" > /etc/apt/preferences.d/mozilla-firefox \
+    && apt-get update \
+    && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends firefox \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV LANG=en_US.UTF-8
+
+RUN locale-gen en_US.UTF-8 \
+    && sed -i -E "s/^; autospawn =.*/autospawn = yes/" /etc/pulse/client.conf \
+    && if [ -f /etc/pulse/client.conf.d/00-disable-autospawn.conf ]; then \
+        sed -i -E "s/^(autospawn=.*)/# \1/" /etc/pulse/client.conf.d/00-disable-autospawn.conf; \
+    fi
 
 COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-*/modules/module-xrdp-source.so /var/lib/xrdp-pulseaudio-installer/
 
