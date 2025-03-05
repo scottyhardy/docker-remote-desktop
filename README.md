@@ -24,6 +24,7 @@ docker run -it \
     --hostname="$(hostname)" \
     --publish="3389:3389/tcp" \
     --name="remote-desktop" \
+    --shm-size="1g" \
     scottyhardy/docker-remote-desktop:latest /bin/bash
 ```
 
@@ -35,6 +36,7 @@ docker run --detach \
     --hostname="$(hostname)" \
     --publish="3389:3389/tcp" \
     --name="remote-desktop" \
+    --shm-size="1g" \
     scottyhardy/docker-remote-desktop:latest
 ```
 
