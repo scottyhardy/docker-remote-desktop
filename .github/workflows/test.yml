@@ -23,7 +23,7 @@ jobs:
             echo "LATEST_LTS_CODENAME=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print tolower($2); exit }' | sed s/\'//g)"
             echo "PREVIOUS_LTS_VERSION=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print $1 }' | tail -n +2 | head -n 1)"
             echo "PREVIOUS_LTS_CODENAME=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print tolower($2) }' | tail -n +2 | head -n 1 | sed "s/'//g")"
-          }  >> "$GITHUB_OUTPUT"
+          } | tee -a "$GITHUB_OUTPUT"
 
   docker_build:
     needs: get_ubuntu_versions
