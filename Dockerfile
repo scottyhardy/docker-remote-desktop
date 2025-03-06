@@ -4,15 +4,9 @@ ARG TAG=latest
 
 FROM ubuntu:$TAG AS builder
 
-RUN if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
-      sed -i -E "s/^(Types: deb|# deb-src )/Types: deb deb-src/" /etc/apt/sources.list.d/ubuntu.sources; \
-    else \
-      sed -i -E "s/^# deb-src /deb-src /g" /etc/apt/sources.list; \
-    fi
-
 # hadolint ignore=DL3008
-RUN apt-get update \
-    && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         build-essential \
         ca-certificates \
         dpkg-dev \
@@ -20,26 +14,25 @@ RUN apt-get update \
         libpulse-dev \
         lsb-release \
         pulseaudio \
-        sudo \
-    && rm -rf /var/lib/apt/lists/*
+        sudo && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git /pulseaudio-module-xrdp \
-    && /pulseaudio-module-xrdp/scripts/install_pulseaudio_sources_apt.sh
+RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git /pulseaudio-module-xrdp && \
+    /pulseaudio-module-xrdp/scripts/install_pulseaudio_sources_apt.sh
 
 WORKDIR /pulseaudio-module-xrdp
 
-RUN ./bootstrap \
-    && ./configure PULSE_DIR=/root/pulseaudio.src \
-    && make \
-    && make install
-
+RUN ./bootstrap && \
+    ./configure PULSE_DIR=/root/pulseaudio.src && \
+    make && \
+    make install
 
 # Build the final image
 FROM ubuntu:$TAG
 
 # hadolint ignore=DL3008
-RUN apt-get update \
-    && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         dbus-x11 \
         git \
         gnupg \
@@ -55,22 +48,22 @@ RUN apt-get update \
         xfce4-pulseaudio-plugin \
         xorgxrdp \
         xrdp \
-        xubuntu-icon-theme \
-    && rm -rf /var/lib/apt/lists/*
+        xubuntu-icon-theme && \
+    rm -rf /var/lib/apt/lists/*
 
-# Add Mozilla Team PPA and install Firefox instead of using default snap package
+# Add Mozilla Team PPA to install Firefox as the default snap package is not detected by XFCE4
 # hadolint ignore=DL3008
-RUN add-apt-repository -y ppa:mozillateam/ppa \
-    && printf "Package: *\nPin: release o=LP-PPA-mozillateam\nPin-Priority: 1001\n" > /etc/apt/preferences.d/mozilla-firefox \
-    && apt-get update \
-    && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends firefox \
-    && rm -rf /var/lib/apt/lists/*
+RUN add-apt-repository -y ppa:mozillateam/ppa && \
+    printf "Package: *\nPin: release o=LP-PPA-mozillateam\nPin-Priority: 1001\n" > /etc/apt/preferences.d/mozilla-firefox && \
+    apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends firefox && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV LANG=en_US.UTF-8
 
-RUN locale-gen en_US.UTF-8 \
-    && sed -i -E "s/^; autospawn =.*/autospawn = yes/" /etc/pulse/client.conf \
-    && if [ -f /etc/pulse/client.conf.d/00-disable-autospawn.conf ]; then \
+RUN locale-gen en_US.UTF-8 && \
+    sed -i -E "s/^; autospawn =.*/autospawn = yes/" /etc/pulse/client.conf && \
+    if [ -f /etc/pulse/client.conf.d/00-disable-autospawn.conf ]; then \
         sed -i -E "s/^(autospawn=.*)/# \1/" /etc/pulse/client.conf.d/00-disable-autospawn.conf; \
     fi
 
