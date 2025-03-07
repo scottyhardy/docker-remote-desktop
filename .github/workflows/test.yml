@@ -45,8 +45,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and push
-        id: docker_build
+      - name: Build and export to local Docker instance
         uses: docker/build-push-action@v4
         with:
           build-args: |
@@ -54,5 +53,11 @@ jobs:
           platforms: |
             linux/amd64,
             linux/arm64
-          push: false
-          tags: docker-remote-desktop:${{ matrix.ubuntu_version }}
+          load: true
+          tags: docker-remote-desktop:latest
+
+      - name: Test
+        run: |
+          ./start
+          sleep 5
+          ./stop
