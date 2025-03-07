@@ -50,9 +50,6 @@ jobs:
         with:
           build-args: |
             TAG=${{ matrix.ubuntu_codename }}
-          platforms: |
-            linux/amd64,
-            linux/arm64
           load: true
           tags: docker-remote-desktop:latest
 

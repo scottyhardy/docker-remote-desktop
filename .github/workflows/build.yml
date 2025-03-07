@@ -58,11 +58,8 @@ jobs:
         with:
           build-args: |
             TAG=${{ matrix.ubuntu_codename }}
-          platforms: |
-            linux/amd64,
-            linux/arm64
-          cache-to: type=local,dest=/tmp/.buildx-cache
           load: true
+          cache-to: type=local,dest=/tmp/.buildx-cache
           tags: docker-remote-desktop:latest
 
       - name: Test
@@ -94,8 +91,8 @@ jobs:
           platforms: |
             linux/amd64,
             linux/arm64
-          cache-from: type=local,src=/tmp/.buildx-cache
           push: true
+          cache-from: type=local,src=/tmp/.buildx-cache
           tags: ${{ steps.tags.outputs.value }}
 
       - name: Update Docker Hub repository description
