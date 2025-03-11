@@ -73,7 +73,7 @@ COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-
 # See https://github.com/scottyhardy/docker-remote-desktop/issues/42
 RUN if [ "$(uname -m)" = "aarch64" ]; then \
         sed -i '1a\\nunset DBUS_SESSION_BUS_ADDRESS' /etc/xdg/xfce4/xinitrc && \
-        sed -i 's|^Exec=sh -c "systemctl --user start xfce4-notifyd.service.*|Exec=/usr/lib/aarch64-linux-gnu/xfce4/notifyd/xfce4-notifyd|' /etc/xdg/autostart/xfce4-notifyd.desktop; \
+        sed -i -E 's/^Exec=sh -c \"systemctl.*\|\|\s+(exec .*)"/Exec=sh -c "\1"/' /etc/xdg/autostart/xfce4-notifyd.desktop; \
     fi
 
 COPY entrypoint.sh /usr/bin/entrypoint
