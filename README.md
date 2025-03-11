@@ -2,19 +2,28 @@
 
 [![build](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml/badge.svg)](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml)
 
-Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
+Docker image with RDP server using [Xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
 
 Images are built weekly using the latest and previous Ubuntu LTS versions. Use the `previous-lts` tag to access the previous LTS version.
 
-Includes builds for both `linux/amd64` and `linux/arm64` platforms, making it compatible with macOS devices featuring M-series CPUs.
+Includes builds for both `linux/amd64` and `linux/arm64` platforms, making it compatible with standard x86_64 systems, macOS devices featuring M-series CPUs, and IoT hardware like the Raspberry Pi.
 
-## Running manually with `docker` commands
+- [Prerequisites](#prerequisites)
+- [Running manually with docker commands](#running-manually-with-docker-commands)
+- [Connecting with an RDP client](#connecting-with-an-rdp-client)
+- [Building docker-remote-desktop on your own machine](#building-docker-remote-desktop-on-your-own-machine)
+- [Running local images with scripts](#running-local-images-with-scripts)
+- [License](#license)
 
-Download the latest version of the image:
+## Prerequisites
 
-```bash
-docker pull scottyhardy/docker-remote-desktop
-```
+- Docker installed on your machine. You can download it from [Docker's official website](https://www.docker.com/products/docker-desktop).
+- A Remote Desktop client:
+  - Windows: Remote Desktop Connection is pre-installed on all Windows desktops and servers.
+  - macOS: The Microsoft Remote Desktop application can be downloaded for free from the App Store.
+  - Linux: The Remmina Remote Desktop client is recommended. You can find installation instructions on the [Remmina website](https://remmina.org/how-to-install-remmina/).
+
+## Running manually with docker commands
 
 To run with an interactive bash session:
 
@@ -46,12 +55,15 @@ To stop the detached container:
 docker kill remote-desktop
 ```
 
+Download the latest version of docker-remote-desktop:
+
+```bash
+docker pull scottyhardy/docker-remote-desktop
+```
+
 ## Connecting with an RDP client
 
-All Windows desktops and servers come with Remote Desktop pre-installed and macOS users can download the Microsoft Remote Desktop application for free from the App Store.  For Linux users, I'd suggest using the Remmina Remote Desktop client.
-
-For the hostname, use `localhost` if the container is hosted on the same machine you're running your Remote Desktop client on and for remote connections just use the name or IP address of the machine you are connecting to.
-NOTE: To connect to a remote machine, it will require TCP port 3389 to be exposed through the firewall.
+To connect to the container, use `localhost` as the hostname if the container is running on the same machine as your Remote Desktop application. For remote connections, use the name or IP address of the machine hosting the container. Ensure that TCP port 3389 is open on the firewall of the host machine.
 
 To log in, use the following default user account details:
 
@@ -88,7 +100,7 @@ docker build -t docker-remote-desktop .
 
 ## Running local images with scripts
 
-I've created some simple scripts that give the minimum requirements for either running the container interactively or running as a detached daemon.
+These simple scripts are provided to run the local container image built in the previous step, either interactively or as a detached daemon. Note that these scripts do not download the image from Docker Hub.
 
 To run with an interactive bash session:
 
@@ -107,3 +119,7 @@ To stop the detached container:
 ```bash
 ./stop
 ```
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
