@@ -51,7 +51,7 @@ RUN apt-get update && \
         xubuntu-icon-theme && \
     rm -rf /var/lib/apt/lists/*
 
-# Add Mozilla Team PPA to install Firefox as the default snap package is not detected by XFCE4
+# Add Mozilla Team PPA to install Firefox as the default snap package is not detected by XFCE
 # hadolint ignore=DL3008
 RUN add-apt-repository -y ppa:mozillateam/ppa && \
     printf "Package: *\nPin: release o=LP-PPA-mozillateam\nPin-Priority: 1001\n" > /etc/apt/preferences.d/mozilla-firefox && \
@@ -68,6 +68,13 @@ RUN locale-gen en_US.UTF-8 && \
     fi
 
 COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-*/modules/module-xrdp-source.so /var/lib/xrdp-pulseaudio-installer/
+
+# Workaround for `systemctl --user` hanging on ARM64 architecture
+# See https://github.com/scottyhardy/docker-remote-desktop/issues/42
+RUN if [ "$(uname -m)" = "aarch64" ]; then \
+        sed -i '1a\\nunset DBUS_SESSION_BUS_ADDRESS' /etc/xdg/xfce4/xinitrc && \
+        sed -i 's|^Exec=sh -c "systemctl --user start xfce4-notifyd.service.*|Exec=/usr/lib/aarch64-linux-gnu/xfce4/notifyd/xfce4-notifyd|' /etc/xdg/autostart/xfce4-notifyd.desktop; \
+    fi
 
 COPY entrypoint.sh /usr/bin/entrypoint
 
