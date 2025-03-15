@@ -71,10 +71,10 @@ COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-
 
 # Workaround for `systemctl --user` hanging on ARM64 architecture
 # See https://github.com/scottyhardy/docker-remote-desktop/issues/42
-RUN if [ "$(uname -m)" = "aarch64" ]; then \
-        sed -i '1a\\nunset DBUS_SESSION_BUS_ADDRESS' /etc/xdg/xfce4/xinitrc && \
-        sed -i -E 's/^Exec=sh -c \"systemctl.*\|\|\s+(exec .*)"/Exec=sh -c "\1"/' /etc/xdg/autostart/xfce4-notifyd.desktop; \
-    fi
+COPY systemctl-wrapper.sh /usr/bin/systemctl-wrapper
+RUN chmod +x /usr/bin/systemctl-wrapper && \
+    mv /usr/bin/systemctl /usr/bin/systemctl-original && \
+    ln -s /usr/bin/systemctl-wrapper /usr/bin/systemctl
 
 COPY entrypoint.sh /usr/bin/entrypoint
 
