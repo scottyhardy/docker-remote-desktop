@@ -1,8 +1,8 @@
 # Build xrdp pulseaudio modules in builder container
 # See https://github.com/neutrinolabs/pulseaudio-module-xrdp/wiki/README
-ARG TAG=latest
+ARG TAG="bookworm-slim"
 
-FROM ubuntu:$TAG AS builder
+FROM debian:$TAG AS builder
 
 # hadolint ignore=DL3008
 RUN apt-get update && \
@@ -28,12 +28,14 @@ RUN ./bootstrap && \
     make install
 
 # Build the final image
-FROM ubuntu:$TAG
+FROM debian:$TAG
 
 # hadolint ignore=DL3008
 RUN apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         dbus-x11 \
+        elementary-xfce-icon-theme \
+        firefox-esr \
         git \
         gnupg \
         locales \
@@ -47,37 +49,24 @@ RUN apt-get update && \
         xfce4-goodies \
         xfce4-pulseaudio-plugin \
         xorgxrdp \
-        xrdp \
-        xubuntu-icon-theme && \
+        xrdp && \
     rm -rf /var/lib/apt/lists/*
 
-# Add Mozilla Team PPA to install Firefox as the default snap package is not detected by XFCE
-# hadolint ignore=DL3008
-RUN add-apt-repository -y ppa:mozillateam/ppa && \
-    printf "Package: *\nPin: release o=LP-PPA-mozillateam\nPin-Priority: 1001\n" > /etc/apt/preferences.d/mozilla-firefox && \
-    apt-get update && \
-    DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends firefox && \
-    rm -rf /var/lib/apt/lists/*
-
-ENV LANG=en_US.UTF-8
-
+# Set locale and configure xrdp to start PulseAudio with XFCE
+ENV LANG="en_US.UTF-8"
 RUN locale-gen en_US.UTF-8 && \
-    sed -i -E "s/^; autospawn =.*/autospawn = yes/" /etc/pulse/client.conf && \
-    if [ -f /etc/pulse/client.conf.d/00-disable-autospawn.conf ]; then \
-        sed -i -E "s/^(autospawn=.*)/# \1/" /etc/pulse/client.conf.d/00-disable-autospawn.conf; \
-    fi
-
-COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-*/modules/module-xrdp-source.so /var/lib/xrdp-pulseaudio-installer/
+    sed -i '2i /usr/bin/pulseaudio &' /etc/xrdp/startwm.sh
 
 # Workaround for `systemctl --user` hanging on ARM64 architecture
 # See https://github.com/scottyhardy/docker-remote-desktop/issues/42
-COPY systemctl-wrapper.sh /usr/bin/systemctl-wrapper
-RUN chmod +x /usr/bin/systemctl-wrapper && \
+RUN printf "#!/usr/bin/env bash\n\nif [ \"\$1\" = \"--user\" ]; then\n    echo \"Error: systemctl --user is not supported.\"\n    exit 1\nelse\n    exec /usr/bin/systemctl-original \"\$@\"\nfi\n" > /usr/bin/systemctl-wrapper && \
+    chmod +x /usr/bin/systemctl-wrapper && \
     mv /usr/bin/systemctl /usr/bin/systemctl-original && \
     ln -s /usr/bin/systemctl-wrapper /usr/bin/systemctl
 
-COPY entrypoint.sh /usr/bin/entrypoint
-
 EXPOSE 3389/tcp
+
+COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-*/modules/module-xrdp-source.so /var/lib/xrdp-pulseaudio-installer/
+COPY entrypoint.sh /usr/bin/entrypoint
 
 ENTRYPOINT ["/usr/bin/entrypoint"]
