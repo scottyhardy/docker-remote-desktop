@@ -2,9 +2,7 @@
 
 [![build](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml/badge.svg)](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml)
 
-Docker container image with RDP server using [Xrdp](http://xrdp.org) running on Ubuntu with [XFCE](https://xfce.org).
-
-Container images are built weekly using the latest and previous Ubuntu LTS versions. Use the `previous-lts` tag to access the previous LTS version.
+Docker container image with RDP server, built weekly on Debian Bookworm with [Xrdp](http://xrdp.org) and [XFCE](https://xfce.org).
 
 ## Getting Started
 
@@ -57,8 +55,8 @@ Use `localhost` as the hostname if the container is running on the same machine 
 To log in, use the following default user account details:
 
 ```bash
-Username: ubuntu
-Password: ubuntu
+Username: user
+Password: user
 ```
 
 ![Screenshot of login prompt](https://raw.githubusercontent.com/scottyhardy/docker-remote-desktop/master/screenshot_1.png)
