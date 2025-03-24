@@ -17,18 +17,16 @@ RUN apt-get update && \
         sudo && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git /pulseaudio-module-xrdp && \
-    /pulseaudio-module-xrdp/scripts/install_pulseaudio_sources_apt.sh
-
-WORKDIR /pulseaudio-module-xrdp
-
-RUN ./bootstrap && \
+RUN git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git /tmp/pulseaudio-module-xrdp
+WORKDIR /tmp/pulseaudio-module-xrdp
+RUN ./scripts/install_pulseaudio_sources_apt.sh && \
+    ./bootstrap && \
     ./configure PULSE_DIR=/root/pulseaudio.src && \
     make && \
-    make install
+    make install DESTDIR=/tmp/install
 
 # Build the final image
-FROM debian:$TAG
+FROM debian:$TAG AS final
 
 # hadolint ignore=DL3008
 RUN apt-get update && \
@@ -52,10 +50,9 @@ RUN apt-get update && \
         xrdp && \
     rm -rf /var/lib/apt/lists/*
 
-# Set locale and configure xrdp to start PulseAudio with XFCE
+# Set locale
 ENV LANG="en_US.UTF-8"
-RUN locale-gen en_US.UTF-8 && \
-    sed -i '2i /usr/bin/pulseaudio &' /etc/xrdp/startwm.sh
+RUN locale-gen en_US.UTF-8
 
 # Workaround for `systemctl --user` hanging on ARM64 architecture
 # See https://github.com/scottyhardy/docker-remote-desktop/issues/42
@@ -70,9 +67,11 @@ RUN printf "#!/usr/bin/env bash\n" > /usr/bin/systemctl-wrapper && \
     mv /usr/bin/systemctl /usr/bin/systemctl-original && \
     ln -s /usr/bin/systemctl-wrapper /usr/bin/systemctl
 
+# Configure pulseaudio for xrdp
+COPY --from=builder /tmp/install/ /
+RUN sed -i 's|^Exec=.*|Exec=/usr/bin/pulseaudio|' /etc/xdg/autostart/pulseaudio-xrdp.desktop
+
 EXPOSE 3389/tcp
 
-COPY --from=builder /usr/lib/pulse-*/modules/module-xrdp-sink.so /usr/lib/pulse-*/modules/module-xrdp-source.so /var/lib/xrdp-pulseaudio-installer/
 COPY entrypoint.sh /usr/bin/entrypoint
-
 ENTRYPOINT ["/usr/bin/entrypoint"]
