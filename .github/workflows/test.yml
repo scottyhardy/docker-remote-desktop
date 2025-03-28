@@ -7,34 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  get_ubuntu_versions:
-    runs-on: ubuntu-latest
-    outputs:
-      latest_lts_version: ${{ steps.get_versions.outputs.LATEST_LTS_VERSION }}
-      latest_lts_codename: ${{ steps.get_versions.outputs.LATEST_LTS_CODENAME }}
-      previous_lts_version: ${{ steps.get_versions.outputs.PREVIOUS_LTS_VERSION }}
-      previous_lts_codename: ${{ steps.get_versions.outputs.PREVIOUS_LTS_CODENAME }}
-    steps:
-      - name: Get Ubuntu versions and codenames
-        id: get_versions
-        run: |
-          {
-            echo "LATEST_LTS_VERSION=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print $1; exit }')"
-            echo "LATEST_LTS_CODENAME=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print tolower($2); exit }' | sed s/\'//g)"
-            echo "PREVIOUS_LTS_VERSION=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print $1 }' | tail -n +2 | head -n 1)"
-            echo "PREVIOUS_LTS_CODENAME=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print tolower($2) }' | tail -n +2 | head -n 1 | sed "s/'//g")"
-          } | tee -a "$GITHUB_OUTPUT"
-
   docker_build:
-    needs: get_ubuntu_versions
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.latest_lts_version }}
-            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.latest_lts_codename }}
-          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.previous_lts_version }}
-            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.previous_lts_codename }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -45,16 +19,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and export to local Docker instance
+      - name: Build multi-arch Docker image
         uses: docker/build-push-action@v4
         with:
-          build-args: |
-            TAG=${{ matrix.ubuntu_codename }}
-          load: true
-          tags: docker-remote-desktop:latest
-
-      - name: Test
-        run: |
-          ./start
-          sleep 5
-          ./stop
+          platforms: |
+            linux/amd64,
+            linux/arm64
+          outputs: type=digest

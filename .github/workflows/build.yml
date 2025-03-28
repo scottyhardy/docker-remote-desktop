@@ -5,38 +5,12 @@ on:
     branches:
       - master
   schedule:
-    - cron: '0 2 * * SUN'
+    - cron: '0 2 1 * *'
   workflow_dispatch:
 
 jobs:
-  get_ubuntu_versions:
-    runs-on: ubuntu-latest
-    outputs:
-      latest_lts_version: ${{ steps.get_versions.outputs.LATEST_LTS_VERSION }}
-      latest_lts_codename: ${{ steps.get_versions.outputs.LATEST_LTS_CODENAME }}
-      previous_lts_version: ${{ steps.get_versions.outputs.PREVIOUS_LTS_VERSION }}
-      previous_lts_codename: ${{ steps.get_versions.outputs.PREVIOUS_LTS_CODENAME }}
-    steps:
-      - name: Get Ubuntu versions and codenames
-        id: get_versions
-        run: |
-          {
-            echo "LATEST_LTS_VERSION=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print $1; exit }')"
-            echo "LATEST_LTS_CODENAME=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print tolower($2); exit }' | sed s/\'//g)"
-            echo "PREVIOUS_LTS_VERSION=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print $1 }' | tail -n +2 | head -n 1)"
-            echo "PREVIOUS_LTS_CODENAME=$(curl -s https://endoflife.date/ubuntu | awk '/LTS/ { print tolower($2) }' | tail -n +2 | head -n 1 | sed "s/'//g")"
-          } | tee -a "$GITHUB_OUTPUT"
-
   docker_build:
-    needs: get_ubuntu_versions
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.latest_lts_version }}
-            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.latest_lts_codename }}
-          - ubuntu_version: ${{ needs.get_ubuntu_versions.outputs.previous_lts_version }}
-            ubuntu_codename: ${{ needs.get_ubuntu_versions.outputs.previous_lts_codename }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -56,44 +30,37 @@ jobs:
       - name: Build and export to local Docker instance
         uses: docker/build-push-action@v4
         with:
-          build-args: |
-            TAG=${{ matrix.ubuntu_codename }}
           load: true
-          cache-to: type=local,dest=/tmp/.buildx-cache
-          tags: docker-remote-desktop:latest
+          tags: docker-remote-desktop
 
-      - name: Test
+      - name: Extract Debian version from image
+        id: extract_version
         run: |
-          ./start
-          sleep 5
-          ./stop
+          {
+            echo "DEBIAN_CODENAME=$(docker run --rm docker-remote-desktop grep VERSION_CODENAME= /etc/os-release | cut -d= -f2)"
+            echo "DEBIAN_MAJOR_VERSION=$(docker run --rm docker-remote-desktop cat /etc/debian_version | cut -d. -f1)"
+            echo "DEBIAN_VERSION=$(docker run --rm docker-remote-desktop cat /etc/debian_version)"
+          } | tee -a "${GITHUB_OUTPUT}"
 
-      - name: Determine tags
-        uses: haya14busa/action-cond@v1.2.0
-        id: tags
-        with:
-          cond: ${{ matrix.ubuntu_codename == needs.get_ubuntu_versions.outputs.latest_lts_codename }}
-          if_true: |
-            scottyhardy/docker-remote-desktop:latest,
-            scottyhardy/docker-remote-desktop:ubuntu-${{ matrix.ubuntu_codename }},
-            scottyhardy/docker-remote-desktop:ubuntu-${{ matrix.ubuntu_version }}
-          if_false: |
-            scottyhardy/docker-remote-desktop:previous-lts,
-            scottyhardy/docker-remote-desktop:ubuntu-${{ matrix.ubuntu_codename }},
-            scottyhardy/docker-remote-desktop:ubuntu-${{ matrix.ubuntu_version }}
+      - name: Get current date
+        id: get_date
+        run: |
+          echo "DATE=$(date +%Y%m%d)" | tee -a "${GITHUB_OUTPUT}"
 
       - name: Build and push
-        if: success()
         uses: docker/build-push-action@v4
         with:
-          build-args: |
-            TAG=${{ matrix.ubuntu_codename }}
           platforms: |
             linux/amd64,
             linux/arm64
           push: true
-          cache-from: type=local,src=/tmp/.buildx-cache
-          tags: ${{ steps.tags.outputs.value }}
+          tags: |
+            scottyhardy/docker-remote-desktop,
+            scottyhardy/docker-remote-desktop:debian,
+            scottyhardy/docker-remote-desktop:debian-${{ steps.extract_version.outputs.DEBIAN_CODENAME }},
+            scottyhardy/docker-remote-desktop:debian-${{ steps.extract_version.outputs.DEBIAN_MAJOR_VERSION }},
+            scottyhardy/docker-remote-desktop:debian-${{ steps.extract_version.outputs.DEBIAN_VERSION }},
+            scottyhardy/docker-remote-desktop:debian-${{ steps.extract_version.outputs.DEBIAN_VERSION }}-${{ steps.extract_version.outputs.DATE }}
 
       - name: Update Docker Hub repository description
         uses: peter-evans/dockerhub-description@v3
