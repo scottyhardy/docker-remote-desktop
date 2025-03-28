@@ -2,7 +2,7 @@
 
 docker run -it \
     --rm \
-    --hostname="$(hostname)" \
+    --hostname="docker-remote-desktop" \
     --publish="3389:3389/tcp" \
     --name="remote-desktop" \
     --shm-size="1g" \

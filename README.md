@@ -11,7 +11,7 @@ Run with an interactive bash session:
 ```bash
 docker run -it \
     --rm \
-    --hostname="$(hostname)" \
+    --hostname="docker-remote-desktop" \
     --publish="3389:3389/tcp" \
     --name="remote-desktop" \
     --shm-size="1g" \
@@ -23,7 +23,7 @@ Start the container as a detached daemon:
 ```bash
 docker run --detach \
     --rm \
-    --hostname="$(hostname)" \
+    --hostname="docker-remote-desktop" \
     --publish="3389:3389/tcp" \
     --name="remote-desktop" \
     --shm-size="1g" \
