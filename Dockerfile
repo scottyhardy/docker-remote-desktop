@@ -56,13 +56,13 @@ RUN locale-gen en_US.UTF-8
 
 # Workaround for `systemctl --user` hanging on ARM64 architecture
 # See https://github.com/scottyhardy/docker-remote-desktop/issues/42
-RUN printf "#!/usr/bin/env bash\n" > /usr/bin/systemctl-wrapper && \
-    printf "if [ \"\$1\" = \"--user\" ]; then\n" >> /usr/bin/systemctl-wrapper && \
-    printf "    echo \"Error: systemctl --user is not supported.\"\n" >> /usr/bin/systemctl-wrapper && \
-    printf "    exit 1\n" >> /usr/bin/systemctl-wrapper && \
-    printf "else\n" >> /usr/bin/systemctl-wrapper && \
-    printf "    exec /usr/bin/systemctl-original \"\$@\"\n" >> /usr/bin/systemctl-wrapper && \
-    printf "fi\n" >> /usr/bin/systemctl-wrapper && \
+RUN echo "#!/usr/bin/env bash" > /usr/bin/systemctl-wrapper && \
+    echo "if [ \"\$1\" = \"--user\" ]; then" >> /usr/bin/systemctl-wrapper && \
+    echo "    echo \"Error: systemctl --user is not supported.\"" >> /usr/bin/systemctl-wrapper && \
+    echo "    exit 1" >> /usr/bin/systemctl-wrapper && \
+    echo "else" >> /usr/bin/systemctl-wrapper && \
+    echo "    exec /usr/bin/systemctl-original \"\$@\"" >> /usr/bin/systemctl-wrapper && \
+    echo "fi" >> /usr/bin/systemctl-wrapper && \
     chmod +x /usr/bin/systemctl-wrapper && \
     mv /usr/bin/systemctl /usr/bin/systemctl-original && \
     ln -s /usr/bin/systemctl-wrapper /usr/bin/systemctl
