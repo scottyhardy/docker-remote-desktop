@@ -9,8 +9,47 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Lint Dockerfiles with hadolint
+        run: |
+          docker pull hadolint/hadolint:latest
+          error_file=$(mktemp)
+          find . -type f -print0 | grep -z -E 'Dockerfile(\..*)?$' | while IFS= read -r -d '' file; do
+            echo "Running hadolint on $file . . ."
+            if ! docker run --rm -i hadolint/hadolint < "$file"; then
+              echo "error" >> "$error_file"
+            fi
+          done
+          if [ -s "$error_file" ]; then
+            echo "Hadolint found errors."
+            rm "$error_file"
+            exit 1
+          fi
+          rm "$error_file"
+
+      - name: Lint shell scripts with ShellCheck
+        run: |
+          docker pull koalaman/shellcheck:latest
+          error_found=0
+          find . -type f -not -path './.*' -exec grep -Iq '^#!' {} \; -print0 | while IFS= read -r -d '' file; do
+            echo "Running shellcheck on $file . . ."
+            if ! docker run --rm -v "$PWD:/scripts" koalaman/shellcheck "/scripts/$file"; then
+              error_found=1
+            fi
+          done
+          if [ "$error_found" -ne 0 ]; then
+            echo "ShellCheck found errors."
+            exit 1
+          fi
+
   docker_build:
     runs-on: ubuntu-latest
+    needs: lint
     steps:
       - name: Checkout
         uses: actions/checkout@v3
