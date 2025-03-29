@@ -64,4 +64,4 @@ jobs:
           platforms: |
             linux/amd64,
             linux/arm64
-          outputs: type=digest
+          load: true
