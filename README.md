@@ -1,6 +1,10 @@
 # docker-remote-desktop
 
 [![build](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml/badge.svg)](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml)
+[![Docker Pulls](https://img.shields.io/docker/pulls/scottyhardy/docker-remote-desktop.svg?style=social)](https://hub.docker.com/r/scottyhardy/docker-remote-desktop)
+[![Docker Stars](https://img.shields.io/docker/stars/scottyhardy/docker-remote-desktop.svg?style=social)](https://hub.docker.com/r/scottyhardy/docker-remote-desktop)
+[![GitHub forks](https://img.shields.io/github/forks/scottyhardy/docker-remote-desktop.svg?style=social)](https://github.com/scottyhardy/docker-remote-desktop/network)
+[![GitHub stars](https://img.shields.io/github/stars/scottyhardy/docker-remote-desktop.svg?style=social)](https://github.com/scottyhardy/docker-remote-desktop/stargazers)
 
 Docker container image with RDP server, built weekly on Debian Bookworm with [Xrdp](http://xrdp.org) and [XFCE](https://xfce.org).
 
@@ -86,7 +90,7 @@ docker build -t docker-remote-desktop .
 
 ## Running locally built container with scripts
 
-These simple scripts are provided to run the local container image built in the previous step, either interactively or as a detached daemon. Note that these scripts do not download the image from Docker Hub.
+These simple scripts are provided to run the local container image built in the previous step, either interactively or as a detached daemon. Note that these scripts do not pull the image from Docker Hub.
 
 To run with an interactive bash session:
 
