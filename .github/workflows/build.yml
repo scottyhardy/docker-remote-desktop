@@ -94,7 +94,7 @@ jobs:
             linux/arm64
           push: true
           tags: |
-            scottyhardy/docker-remote-desktop,
+            scottyhardy/docker-remote-desktop:latest,
             scottyhardy/docker-remote-desktop:debian,
             scottyhardy/docker-remote-desktop:debian-${{ steps.extract_version.outputs.DEBIAN_CODENAME }},
             scottyhardy/docker-remote-desktop:debian-${{ steps.extract_version.outputs.DEBIAN_MAJOR_VERSION }},
