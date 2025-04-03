@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# Delete default ubuntu account
-if id ubuntu > /dev/null 2>&1; then
-    deluser --remove-home ubuntu > /dev/null 2>&1
-fi
-
 # Create the user account
 groupadd --gid 1020 ubuntu
 useradd --shell /bin/bash --uid 1020 --gid 1020 --groups sudo --password "$(openssl passwd ubuntu)" --create-home --home-dir /home/ubuntu ubuntu

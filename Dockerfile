@@ -57,6 +57,7 @@ RUN apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends firefox && \
     rm -rf /var/lib/apt/lists/* && \
     sed -i 's|^Exec=.*|Exec=/usr/bin/pulseaudio|' /etc/xdg/autostart/pulseaudio-xrdp.desktop && \
+    deluser --remove-home ubuntu && \
     locale-gen en_US.UTF-8
 
 ENV LANG=en_US.UTF-8
