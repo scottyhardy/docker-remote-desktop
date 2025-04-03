@@ -1,20 +1,18 @@
 # docker-remote-desktop
 
 [![build](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml/badge.svg)](https://github.com/scottyhardy/docker-remote-desktop/actions/workflows/build.yml)
+[![GitHub stars](https://img.shields.io/github/stars/scottyhardy/docker-remote-desktop.svg?style=social)](https://github.com/scottyhardy/docker-remote-desktop/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/scottyhardy/docker-remote-desktop.svg?style=social)](https://github.com/scottyhardy/docker-remote-desktop/network)
+[![Docker Stars](https://img.shields.io/docker/stars/scottyhardy/docker-remote-desktop.svg?style=social)](https://hub.docker.com/r/scottyhardy/docker-remote-desktop)
+[![Docker Pulls](https://img.shields.io/docker/pulls/scottyhardy/docker-remote-desktop.svg?style=social)](https://hub.docker.com/r/scottyhardy/docker-remote-desktop)
 
-Docker image with RDP server using [xrdp](http://xrdp.org) on Ubuntu with [XFCE](https://xfce.org).
+Docker image with RDP server using [xrdp](https://www.xrdp.org) on Ubuntu with [Xfce](https://xfce.org).
 
-Images are built weekly using the Ubuntu Docker image with the 'latest' tag.
+Images are built weekly using Ubuntu 24.04 (noble).
 
-## Running manually with `docker` commands
+## Getting Started
 
-Download the latest version of the image:
-
-```bash
-docker pull scottyhardy/docker-remote-desktop
-```
-
-To run with an interactive bash session:
+Run with an interactive bash session:
 
 ```bash
 docker run -it \
@@ -25,7 +23,7 @@ docker run -it \
     scottyhardy/docker-remote-desktop:latest /bin/bash
 ```
 
-To start as a detached daemon:
+Start as a detached daemon:
 
 ```bash
 docker run --detach \
@@ -36,10 +34,16 @@ docker run --detach \
     scottyhardy/docker-remote-desktop:latest
 ```
 
-To stop the detached container:
+Stop the detached container:
 
 ```bash
 docker kill remote-desktop
+```
+
+Download the latest version of the image:
+
+```bash
+docker pull scottyhardy/docker-remote-desktop
 ```
 
 ## Connecting with an RDP client
@@ -60,23 +64,22 @@ Password: ubuntu
 
 ![Screenshot of XFCE desktop](https://raw.githubusercontent.com/scottyhardy/docker-remote-desktop/master/screenshot_2.png)
 
-## Building docker-remote-desktop on your own machine
+## Building docker-remote-desktop
 
-First, clone the GitHub repository:
+Clone the GitHub repository:
 
 ```bash
 git clone https://github.com/scottyhardy/docker-remote-desktop.git
-
 cd docker-remote-desktop
 ```
 
-You can then build the image with the supplied script:
+Build the image with the supplied script:
 
 ```bash
 ./build
 ```
 
-Or run the following `docker` command:
+Or run the following docker command:
 
 ```bash
 docker build -t docker-remote-desktop .
