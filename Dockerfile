@@ -29,8 +29,6 @@ RUN scripts/install_pulseaudio_sources_apt.sh && \
 # Build the final image
 FROM ubuntu:$TAG
 
-COPY --from=builder /tmp/install /
-
 RUN apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
         dbus-x11 \
@@ -56,9 +54,11 @@ RUN apt-get update && \
     apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends firefox && \
     rm -rf /var/lib/apt/lists/* && \
-    sed -i 's|^Exec=.*|Exec=/usr/bin/pulseaudio|' /etc/xdg/autostart/pulseaudio-xrdp.desktop && \
     deluser --remove-home ubuntu && \
     locale-gen en_US.UTF-8
+
+COPY --from=builder /tmp/install /
+RUN sed -i 's|^Exec=.*|Exec=/usr/bin/pulseaudio|' /etc/xdg/autostart/pulseaudio-xrdp.desktop
 
 ENV LANG=en_US.UTF-8
 COPY entrypoint.sh /usr/bin/entrypoint
