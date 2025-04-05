@@ -42,7 +42,8 @@ jobs:
             TAG=${{ env.ubuntu_codename }}
           platforms: |
             linux/amd64,
-            linux/arm64
+            linux/arm64,
+            linux/arm/v7
           push: true
           tags:
             scottyhardy/docker-remote-desktop:latest,
