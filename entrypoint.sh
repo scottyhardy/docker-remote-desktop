@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-# Create the user account
-if ! id ubuntu >/dev/null 2>&1; then
-    groupadd --gid 1020 ubuntu
-    useradd --shell /bin/bash --uid 1020 --gid 1020 --groups sudo --password "$(openssl passwd ubuntu)" --create-home --home-dir /home/ubuntu ubuntu
+# Create and set the password for the user account
+[ -z "$RDP_USER" ] && RDP_USER=ubuntu
+if ! id "$RDP_USER" >/dev/null 2>&1; then
+    useradd --shell /bin/bash --uid 1020 --groups sudo --create-home "$RDP_USER"
+    [ -z "$RDP_PASSWORD" ] && RDP_PASSWORD=ubuntu
+    echo "$RDP_USER:$RDP_PASSWORD" | chpasswd
 fi
 
 # Remove existing sesman/xrdp PID files to prevent rdp sessions hanging on container restart

@@ -46,6 +46,26 @@ Download the latest version of the image:
 docker pull scottyhardy/docker-remote-desktop
 ```
 
+You can also customize the password and even the username, which primarily involves two environment variables:
+
+- `RDP_USER`  
+The RDP login username, default is "ubuntu".
+- `RDP_PASSWORD`  
+The RDP login password, default is "ubuntu".
+
+An example of setting the username to `user` and the password to `password`:
+
+```bash
+docker run --detach \
+    --rm \
+    --hostname="$(hostname)" \
+    --publish="3389:3389/tcp" \
+    --env RDP_USER=user \
+    --env RDP_PASSWORD=password \
+    --name="remote-desktop" \
+    scottyhardy/docker-remote-desktop:latest
+```
+
 ## Connecting with an RDP client
 
 All Windows desktops and servers come with Remote Desktop pre-installed and macOS users can download the Microsoft Remote Desktop application for free from the App Store.  For Linux users, I'd suggest using the Remmina Remote Desktop client.
