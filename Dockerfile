@@ -36,14 +36,11 @@ RUN apt-get update && \
         locales \
         pavucontrol \
         pulseaudio \
-        pulseaudio-utils \
         software-properties-common \
         sudo \
         vim \
-        x11-xserver-utils \
         xfce4 \
         xfce4-goodies \
-        xfce4-pulseaudio-plugin \
         xorgxrdp \
         xrdp \
         xubuntu-icon-theme && \
@@ -55,12 +52,12 @@ RUN apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends firefox && \
     rm -rf /var/lib/apt/lists/* && \
     deluser --remove-home ubuntu && \
-    locale-gen en_US.UTF-8
+    locale-gen en_US.UTF-8 && \
+    echo 'LANG=en_US.UTF-8' > /etc/default/locale
 
 COPY --from=builder /tmp/install /
 RUN sed -i 's|^Exec=.*|Exec=/usr/bin/pulseaudio|' /etc/xdg/autostart/pulseaudio-xrdp.desktop
 
-ENV LANG=en_US.UTF-8
 COPY entrypoint.sh /usr/bin/entrypoint
 EXPOSE 3389/tcp
 ENTRYPOINT ["/usr/bin/entrypoint"]
